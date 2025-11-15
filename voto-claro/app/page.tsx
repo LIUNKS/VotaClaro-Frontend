@@ -32,7 +32,7 @@ export default function HomePage() {
 
   // Función para obtener estilos según el tema
   const getTourStyles = () => {
-    const isDark = document.documentElement.classList.contains('dark');
+    const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
     const hasTarget = currentTourTarget && currentTourTarget !== '.tour-welcome' && currentTourTarget !== '.tour-navigation';
     
     return {
