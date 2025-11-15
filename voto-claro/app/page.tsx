@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NewsCard, VotingLocation, CandidatesGrid } from "@/components/home";
-import { BottomNavigation } from "@/components/ui/BottomNavigation";
+import { BottomNavigation } from "@/components/BottomNavigation";
 import { Footer } from "@/components/ui/Footer";
+import { Header } from "@/components/layouts";
 import { ModeToggle } from '@/components/toogle-dark-mode';
 import { NewsSkeleton } from "@/components/ui/NewsSkeleton";
 import { NewsError } from "@/components/ui/NewsError";
@@ -488,71 +489,7 @@ export default function HomePage() {
       )}
 
       {/* Header */}
-      <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10 tour-welcome">
-        <div className="max-w-md lg:max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-foreground text-base lg:text-lg">Elecciones 2026</span>
-          </div>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 tour-navigation">
-            <button 
-              onClick={() => setActiveTab("home")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "home" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              Inicio
-            </button>
-            <button 
-              onClick={() => setActiveTab("candidates")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "candidates" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              Candidatos
-            </button>
-            <button 
-              onClick={() => setActiveTab("members")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "members" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              Miembros
-            </button>
-            <button 
-              onClick={() => setActiveTab("profile")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "profile" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              Perfil
-            </button>
-          </nav>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={startTour}
-              className="p-1 hover:bg-muted rounded-full transition-colors"
-              title="Iniciar tour guiado"
-            >
-              <HelpCircle className="w-6 h-6 text-muted-foreground" />
-            </button>
-            <ModeToggle />
-            <button className="p-1 hover:bg-muted rounded-full transition-colors">
-              <Bell className="w-6 h-6 text-muted-foreground" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header onStartTour={startTour} showTourButton={true} />
 
       {/* Main Content */}
       <main className="max-w-md lg:max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 pb-20 lg:pb-6">
@@ -687,10 +624,7 @@ export default function HomePage() {
 
       {/* Bottom Navigation - Mobile Only */}
       <div className="lg:hidden">
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
+        <BottomNavigation />
       </div>
     </div>
   );
