@@ -17,11 +17,10 @@ export function BottomNavigation() {
 
   const getActiveTab = () => {
     if (pathname === '/') return 'home';
-    if (pathname === '/noticias') return 'noticias';
-    if (pathname === '/candidates') return 'candidates';
+    if (pathname === '/noticias' || pathname.startsWith('/noticias/')) return 'noticias';
+    if (pathname === '/candidates' || pathname.startsWith('/candidates/')) return 'candidates';
     if (pathname === '/members') return 'members';
     if (pathname === '/profile') return 'profile';
-    if (pathname.startsWith('/candidates/')) return 'candidates';
     return 'home'; // default
   };
 
