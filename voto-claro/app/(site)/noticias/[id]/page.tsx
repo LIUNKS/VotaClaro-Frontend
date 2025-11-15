@@ -136,10 +136,7 @@ export default function NoticiaDetailPage() {
         
         {/* Bottom Navigation - Mobile Only */}
         <div className="lg:hidden">
-          <BottomNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
+          <BottomNavigation />
         </div>
       </div>
     );
