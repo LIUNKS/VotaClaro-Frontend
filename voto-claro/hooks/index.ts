@@ -1,8 +1,10 @@
+'use client';
 import { useState, useEffect } from 'react';
 
 // Exportar hooks personalizados
+
+export { useIsMobile } from './use-mobile';
 export { useNews } from './useNews';
-export { useTour } from './useTour';
 
 // Hook para geolocalización
 export const useGeolocation = () => {

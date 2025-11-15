@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { Card, CardContent } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
+import { useScrollRestore } from '@/hooks';
 
 interface NewsCardProps {
   title: string;
   description?: string;
-  type: "gradient" | "image";
+  type: 'gradient' | 'image';
   image?: string;
   link?: string;
   pubDate?: string;
@@ -15,10 +16,13 @@ interface NewsCardProps {
 
 export function NewsCard({ title, description, type, image, link, pubDate, newsId }: NewsCardProps) {
   const router = useRouter();
+  const { saveScrollPosition } = useScrollRestore({ key: 'home' });
 
   const handleClick = () => {
     if (newsId !== undefined) {
-      router.push(`/noticias/${newsId}`);
+      // Usar la función del hook
+      saveScrollPosition();
+      router.push(`/noticias/${newsId}?from=home`);
     }
   };
 
@@ -28,14 +32,14 @@ export function NewsCard({ title, description, type, image, link, pubDate, newsI
       onClick={handleClick}
     >
       <CardContent className="p-4 lg:p-6">
-        {type === "gradient" && (
+        {type === 'gradient' && (
           <div className="w-full h-32 lg:h-40 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg mb-4 flex items-center justify-center">
             <div className="text-white text-center">
             </div>
           </div>
         )}
         
-        {type === "image" && image && (
+        {type === 'image' && image && (
           <div className="w-full h-32 lg:h-40 bg-muted rounded-lg mb-4 overflow-hidden">
             <img 
               src={image}

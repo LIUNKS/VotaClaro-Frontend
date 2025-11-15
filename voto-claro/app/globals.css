@@ -272,3 +272,33 @@
     }
   }
 }
+
+
+/* Smooth scrolling mejorado */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimización para dispositivos móviles */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  * {
+    scroll-behavior: inherit;
+  }
+}
+
+/* Respeto por usuarios que prefieren movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
