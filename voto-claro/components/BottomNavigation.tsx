@@ -4,33 +4,25 @@ import { Home, Users, GraduationCap, User, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-interface BottomNavigationProps {
-  activeTab?: 'home' | 'noticias' | 'candidates' | 'members' | 'profile';
-  onTabChange?: (tab: 'home' | 'noticias' | 'candidates' | 'members' | 'profile') => void;
-}
-
-export function BottomNavigation({ 
-  activeTab = 'home', 
-  onTabChange 
-}: BottomNavigationProps) {
+export function BottomNavigation() {
   const pathname = usePathname();
   
   const navItems = [
     { id: 'home', icon: Home, label: 'Inicio', href: '/' },
     { id: 'noticias', icon: Newspaper, label: 'Noticias', href: '/noticias' },
     { id: 'candidates', icon: Users, label: 'Candidatos', href: '/candidates' },
-    { id: 'members', icon: GraduationCap, label: 'Miembros', href: '#' },
-    { id: 'profile', icon: User, label: 'Perfil', href: '#' },
+    { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/members' },
+    { id: 'profile', icon: User, label: 'Perfil', href: '/profile' },
   ] as const;
 
   const getActiveTab = () => {
     if (pathname === '/') return 'home';
     if (pathname === '/noticias') return 'noticias';
     if (pathname === '/candidates') return 'candidates';
-
-    if (pathname.startsWith('/candidates/') && activeTab === 'home') return 'home';
+    if (pathname === '/members') return 'members';
+    if (pathname === '/profile') return 'profile';
     if (pathname.startsWith('/candidates/')) return 'candidates';
-    return activeTab;
+    return 'home'; // default
   };
 
   const currentActiveTab = getActiveTab();
@@ -42,29 +34,6 @@ export function BottomNavigation({
           {navItems.map(({ id, icon: Icon, label, href }) => {
             const isActive = currentActiveTab === id;
             
-            if (href.startsWith('#')) {
-              return (
-                <button
-                  key={id}
-                  onClick={() => onTabChange?.(id)}
-                  className="flex flex-col items-center py-2 px-3 min-w-0 transition-colors"
-                >
-                  <Icon 
-                    className={`w-6 h-6 ${
-                      isActive ? 'text-primary' : 'text-muted-foreground'
-                    }`} 
-                  />
-                  <span 
-                    className={`text-xs font-medium ${
-                      isActive ? 'text-primary' : 'text-muted-foreground'
-                    }`}
-                  >
-                    {label}
-                  </span>
-                </button>
-              );
-            }
-
             return (
               <Link
                 key={id}
