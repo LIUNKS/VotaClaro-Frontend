@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2018",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,15 +19,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./app/*"],
-      "@/components/*": ["./app/components/*"],
-      "@/hooks/*": ["./app/hooks/*"],
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/hooks/*": ["./hooks/*"],
       "@/services/*": ["./app/services/*"],
       "@/types/*": ["./app/types/*"],
-      "@/utils/*": ["./app/utils/*"],
+      "@/utils/*": ["./lib/*"],
       "@/constants/*": ["./app/constants/*"],
       "@/stores/*": ["./app/stores/*"],
-      "@/lib/*": ["./app/lib/*"]
+      "@/lib/*": ["./lib/*"]
     }
   },
   "include": [

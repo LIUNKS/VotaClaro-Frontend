@@ -1,0 +1,92 @@
+{
+  "ciudadano": {
+    "id": "10001088",
+    "dni": "10001088",
+    "nombre_completo": "Keiko Sofía Fujimori Higuchi",
+    "datos_personales": {
+      "fecha_nacimiento": "25/05/1975",
+      "sexo": null,
+      "educacion": null,
+      "lugar_nacimiento": "Lima, Lima, Jesús María",  
+      "distrito": "Jesús María"  
+    },
+    "antecedentes": {
+      "total": null,
+      "penales": null,
+      "obligaciones": null,
+      "lista_sentencias": [
+        {
+          "tipo": "Penal",
+          "caratula": "Lavado de activos",
+          "expediente": "001-2020",
+          "organo_judicial": "Poder Judicial",
+          "situacion": "En proceso",
+          "fallo": null,
+          "fecha": "2020-05-18"
+        }
+      ]
+    },
+    "ingresos": {
+      "total": 222526,
+      "publico": 222526,
+      "privado": 0,
+      "renta_publico": 0,
+      "renta_privado": 0,
+      "otro_ingreso_publico": 0,
+      "otro_ingreso_privado": 0
+    },
+    "bienes": {
+      "valor_total": 115998,
+      "muebles": null,
+      "inmuebles": null,
+      "detalle_bienes": [
+        {
+          "tipo_bien": "Vehiculo",
+          "modelo": "Subaru Forester",  
+          "anio": null,
+          "placa": "AXH-007",  
+          "caracteristica": null,
+          "valor": 115998,
+          "comentario": "Embargado por orden judicial (incidente 299-2017-51)"  
+        }
+      ]
+    },
+    "local_votacion": {
+      "schoolName": "Colegio Nacional San José",
+      "address": "Av. Principal 123, Miraflores, Lima",
+      "tableNumber": "012345",
+      "latitude": -12.1203,
+      "longitude": -77.0282,
+      "hours": "8:00 AM - 6:00 PM",
+      "capacity": "350 votantes"
+    },
+    "experiencia_laboral": [
+      {
+        "desde": "2013",
+        "hasta": "0000",
+        "cargo": "Presidenta",
+        "organizacion": "Partido Político Fuerza Popular"
+      },
+      {
+        "desde": "2006",
+        "hasta": "2011",
+        "cargo": "Congresista de la República",
+        "organizacion": "Congreso de la República"
+      }
+    ],
+    "formacion_academica": [
+      {
+        "institucion": "Boston University",
+        "carrera": "Administración de Empresas",
+        "grado": "Licenciatura",
+        "anio_fin": 1997
+      },
+      {
+        "institucion": "Columbia University",
+        "carrera": "Maestría en Administración de Empresas",
+        "grado": "Maestría",
+        "anio_fin": 2008
+      }
+    ]
+  }
+}
