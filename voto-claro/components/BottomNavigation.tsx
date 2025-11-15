@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Users, GraduationCap, User, Newspaper } from 'lucide-react';
+import { Home, Users, GraduationCap, Newspaper, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -12,7 +12,7 @@ export function BottomNavigation() {
     { id: 'noticias', icon: Newspaper, label: 'Noticias', href: '/noticias' },
     { id: 'candidates', icon: Users, label: 'Candidatos', href: '/candidates' },
     { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/members' },
-    { id: 'profile', icon: User, label: 'Perfil', href: '/profile' },
+    { id: 'calendar', icon: Calendar, label: 'Calendario', href: '/calendar' },
   ] as const;
 
   const getActiveTab = () => {
