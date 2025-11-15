@@ -22,7 +22,7 @@ export function NewsCard({ title, description, category, type, image }: NewsCard
         )}
         
         {type === "image" && image && (
-          <div className="w-full h-32 lg:h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+          <div className="w-full h-32 lg:h-40 bg-muted rounded-lg mb-4 overflow-hidden">
             <img 
               src={image}
               alt={title}
@@ -40,12 +40,12 @@ export function NewsCard({ title, description, category, type, image }: NewsCard
         )}
         
         {category && (
-          <span className="text-xs lg:text-sm text-blue-600 font-medium mb-2 block">{category}</span>
+          <span className="text-xs lg:text-sm text-primary font-medium mb-2 block">{category}</span>
         )}
         
-        <h3 className="font-semibold text-gray-800 mb-2 text-base lg:text-lg">{title}</h3>
+        <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">{title}</h3>
         {description && (
-          <p className="text-sm lg:text-base text-gray-600">{description}</p>
+          <p className="text-sm lg:text-base text-muted-foreground">{description}</p>
         )}
       </CardContent>
     </Card>
