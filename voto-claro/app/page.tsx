@@ -27,12 +27,12 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-8 py-4 sticky top-0 z-10">
+      <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10">
         <div className="max-w-md lg:max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-800 dark:text-gray-200 text-base lg:text-lg">Elecciones 2026</span>
+            <span className="font-semibold text-foreground text-base lg:text-lg">Elecciones 2026</span>
           </div>
           
           {/* Desktop Navigation */}
@@ -41,8 +41,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("home")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "home" 
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               Inicio
@@ -51,8 +51,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("candidates")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "candidates" 
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               Candidatos
@@ -61,8 +61,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("members")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "members" 
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               Miembros
@@ -71,8 +71,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("profile")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "profile" 
-                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  ? "bg-primary/10 text-primary" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
               Perfil
@@ -81,8 +81,8 @@ export default function HomePage() {
           
           <div className="flex items-center gap-2">
             <ModeToggle />
-            <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-              <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            <button className="p-1 hover:bg-muted rounded-full transition-colors">
+              <Bell className="w-6 h-6 text-muted-foreground" />
             </button>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function HomePage() {
           <div className="lg:col-span-8 space-y-6">
             {/* Noticias Recientes */}
             <section>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4 lg:mb-6">Noticias Recientes</h1>
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-4 lg:mb-6">Noticias Recientes</h1>
               
               <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
                 {newsItems.map((news, index) => (
@@ -132,8 +132,8 @@ export default function HomePage() {
                     <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
                   </div>
                   
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-base lg:text-lg">Calendario Electoral</h3>
-                  <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300">No te pierdas las fechas importantes</p>
+                  <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
+                  <p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
                 </CardContent>
               </Card>
             </section>
@@ -142,7 +142,7 @@ export default function HomePage() {
             <section>
               <Card>
                 <CardContent className="p-4 lg:p-6">
-                  <div className="w-full h-32 lg:h-40 bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                  <div className="w-full h-32 lg:h-40 bg-muted rounded-lg mb-4 overflow-hidden">
                     <img 
                       src="/api/placeholder/300/120"
                       alt="Miembro de mesa"
@@ -158,8 +158,8 @@ export default function HomePage() {
                     />
                   </div>
                   
-                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-base lg:text-lg">Soy Miembro de Mesa</h3>
-                  <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300">Capacitación y materiales</p>
+                  <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Soy Miembro de Mesa</h3>
+                  <p className="text-sm lg:text-base text-muted-foreground">Capacitación y materiales</p>
                 </CardContent>
               </Card>
             </section>
