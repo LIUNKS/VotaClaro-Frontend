@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Exportar hooks personalizados
 export { useNews } from './useNews';
+export { useTour } from './useTour';
 
 // Hook para geolocalización
 export const useGeolocation = () => {
