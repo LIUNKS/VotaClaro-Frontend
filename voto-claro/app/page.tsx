@@ -4,7 +4,6 @@ import { Bell, Calendar, ArrowRight, HelpCircle, Vote, Newspaper, Users, MapPin,
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { NewsCard, VotingLocation, CandidatesGrid } from "@/components/home";
 import { BottomNavigation } from "@/components/ui/BottomNavigation";
