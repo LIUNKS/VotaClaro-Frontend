@@ -3,18 +3,28 @@
 import { ArrowLeft, ExternalLink, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { Footer } from '@/components/ui/Footer';
 import { useState, useEffect } from 'react';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 export default function NoticiaDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Detectar desde dónde viene el usuario
+  const fromPage = searchParams.get('from');
+  const initialTab = fromPage === 'noticias' ? 'noticias' : 'home';
+  
+  const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>(initialTab);
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const newsId = params.id ? parseInt(params.id as string, 10) : null;
-
+  
   useEffect(() => {
     async function fetchNewsDetail() {
       if (newsId === null || isNaN(newsId)) {
@@ -78,22 +88,29 @@ export default function NoticiaDetailPage() {
     }
   };
 
+  const handleBackClick = () => {
+    // Regresar según desde dónde vino
+    if (activeTab === 'noticias') {
+      router.push('/noticias');
+    } else {
+      router.push('/');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
           <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <Link href="/noticias">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-            </Link>
+            <Button variant="ghost" size="icon" onClick={handleBackClick}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
             <h1 className="text-lg font-medium text-foreground">Noticias</h1>
             <div className="w-10"></div>
           </div>
         </header>
         
-        <main className="max-w-4xl mx-auto px-4 py-6">
+        <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
           <div className="animate-pulse space-y-4">
             <div className="h-64 bg-muted rounded-lg"></div>
             <div className="h-8 bg-muted rounded w-3/4"></div>
@@ -105,6 +122,19 @@ export default function NoticiaDetailPage() {
             </div>
           </div>
         </main>
+        
+        {/* Footer - Desktop Only */}
+        <div className="hidden lg:block">
+          <Footer />
+        </div>
+        
+        {/* Bottom Navigation - Mobile Only */}
+        <div className="lg:hidden">
+          <BottomNavigation
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        </div>
       </div>
     );
   }
@@ -114,25 +144,34 @@ export default function NoticiaDetailPage() {
       <div className="min-h-screen bg-background">
         <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
           <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <Link href="/noticias">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-            </Link>
+            <Button variant="ghost" size="icon" onClick={handleBackClick}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
             <h1 className="text-lg font-medium text-foreground">Noticias</h1>
             <div className="w-10"></div>
           </div>
         </header>
         
-        <main className="max-w-4xl mx-auto px-4 py-6">
+        <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
           <div className="text-center py-16">
             <h2 className="text-2xl font-bold text-foreground mb-2">Noticia no encontrada</h2>
             <p className="text-muted-foreground mb-6">La noticia que buscas no está disponible.</p>
-            <Link href="/noticias">
-              <Button>Volver a noticias</Button>
-            </Link>
+            <Button onClick={handleBackClick}>Volver a noticias</Button>
           </div>
         </main>
+        
+        {/* Footer - Desktop Only */}
+        <div className="hidden lg:block">
+          <Footer />
+        </div>
+        
+        {/* Bottom Navigation - Mobile Only */}
+        <div className="lg:hidden">
+          <BottomNavigation
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+        </div>
       </div>
     );
   }
@@ -141,17 +180,15 @@ export default function NoticiaDetailPage() {
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <Link href="/noticias">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-          </Link>
+          <Button variant="ghost" size="icon" onClick={handleBackClick}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
           <h1 className="text-lg font-medium text-foreground">Noticias</h1>
           <div className="w-10"></div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-6">
+      <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
         {currentNews.image && (
           <div className="w-full h-64 md:h-96 bg-muted rounded-lg overflow-hidden mb-6">
             <img 
@@ -244,15 +281,26 @@ export default function NoticiaDetailPage() {
           )}
 
           <div className="mt-8 pt-6 border-t border-border">
-            <Link href="/noticias">
-              <Button variant="outline" className="w-full sm:w-auto">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver a todas las noticias
-              </Button>
-            </Link>
+            <Button variant="outline" className="w-full sm:w-auto" onClick={handleBackClick}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver a todas las noticias
+            </Button>
           </div>
         </article>
       </main>
+
+      {/* Footer - Desktop Only */}
+      <div className="hidden lg:block">
+        <Footer />
+      </div>
+
+      {/* Bottom Navigation - Mobile Only */}
+      <div className="lg:hidden">
+        <BottomNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      </div>
     </div>
   );
 }

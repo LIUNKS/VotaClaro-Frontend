@@ -82,7 +82,7 @@ export default function NoticiasPage() {
   };
 
   const handleNewsClick = (index: number, link?: string) => {
-    router.push(`/noticias/${index}`);
+    router.push(`/noticias/${index}?from=noticias`);
   };
 
   return (
