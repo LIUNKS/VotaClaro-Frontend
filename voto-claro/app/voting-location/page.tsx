@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import GeolocationMap from "@/components/maps/GeolocationMap";
 import { VotingLocationModal } from "@/components/ui/modal";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getVotingLocationByDni, getDefaultVotingLocation, VotingLocationData } from "@/lib/mockData";
 
 export default function VotingLocationPage() {
