@@ -2,12 +2,12 @@
 
 import React, { useState, use, useRef, useEffect } from 'react';
 import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar, ExternalLink, AlertTriangle, DollarSign, Car } from 'lucide-react';
+import { useState, use } from 'react';
+import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { BottomNavigation } from '@/components/ui/BottomNavigation';
-import { Footer } from '@/components/ui/Footer';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getCandidateById } from '@/lib/candidates-data';
 import personasData from '@/personas.json';
 
@@ -19,17 +19,12 @@ interface CandidateDetailPageProps {
 
 export default function CandidateDetailPage({ params }: CandidateDetailPageProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   
-  // Detectar desde dónde viene el usuario
-  const fromPage = searchParams.get('from');
-  const initialTab = fromPage === 'candidates' ? 'candidates' : 'home';
-  
-  const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>(initialTab);
   const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas' | 'antecedentes' | 'patrimonial'>('biografia');
   
   // Ref para el contenedor de tabs
   const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas'>('biografia');
   
   // Unwrap the params Promise using React.use()
   const resolvedParams = use(params);
@@ -102,12 +97,7 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
   };
 
   const handleBackClick = () => {
-    // Regresar según desde dónde vino
-    if (activeTab === 'candidates') {
-      router.push('/candidates');
-    } else {
-      router.push('/');
-    }
+    router.back();
   };
 
   return (
@@ -558,17 +548,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
           </div>
         )}
       </main>
-
-      {/* Footer - Desktop Only */}
-      <Footer />
-
-      {/* Bottom Navigation - Mobile Only */}
-      <div className="lg:hidden">
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { ArrowLeft, ExternalLink, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { BottomNavigation } from '@/components/BottomNavigation';
 import { Footer } from '@/components/ui/Footer';
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
@@ -100,15 +100,6 @@ export default function NoticiaDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <Button variant="ghost" size="icon" onClick={handleBackClick}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-lg font-medium text-foreground">Noticias</h1>
-            <div className="w-10"></div>
-          </div>
-        </header>
         
         <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
           <div className="animate-pulse space-y-4">
@@ -122,19 +113,6 @@ export default function NoticiaDetailPage() {
             </div>
           </div>
         </main>
-        
-        {/* Footer - Desktop Only */}
-        <div className="hidden lg:block">
-          <Footer />
-        </div>
-        
-        {/* Bottom Navigation - Mobile Only */}
-        <div className="lg:hidden">
-          <BottomNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
-        </div>
       </div>
     );
   }
@@ -142,15 +120,6 @@ export default function NoticiaDetailPage() {
   if (error || !currentNews) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
-          <div className="flex items-center justify-between max-w-4xl mx-auto">
-            <Button variant="ghost" size="icon" onClick={handleBackClick}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-lg font-medium text-foreground">Noticias</h1>
-            <div className="w-10"></div>
-          </div>
-        </header>
         
         <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
           <div className="text-center py-16">
@@ -288,19 +257,6 @@ export default function NoticiaDetailPage() {
           </div>
         </article>
       </main>
-
-      {/* Footer - Desktop Only */}
-      <div className="hidden lg:block">
-        <Footer />
-      </div>
-
-      {/* Bottom Navigation - Mobile Only */}
-      <div className="lg:hidden">
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-      </div>
     </div>
   );
 }
