@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { ArrowLeft, ExternalLink, Calendar, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { ArrowLeft, ExternalLink, Calendar, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 export default function NoticiaDetailPage() {
   const params = useParams();
@@ -68,7 +68,7 @@ export default function NoticiaDetailPage() {
         minute: '2-digit'
       });
     } catch {
-      return "Fecha no disponible";
+      return 'Fecha no disponible';
     }
   };
 
