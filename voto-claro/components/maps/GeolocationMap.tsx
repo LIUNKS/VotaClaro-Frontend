@@ -78,7 +78,7 @@ const GeolocationMap: React.FC<GeolocationMapProps> = ({
       map.current.on('load', () => {
         if (map.current) {
           marker.current = new mapboxgl.Marker({
-            color: '#ff6b6b'
+            color: '#2563eb'
           })
             .setLngLat([longitude, latitude])
             .setPopup(new mapboxgl.Popup().setHTML(`<h3>${markerTitle}</h3>`))
