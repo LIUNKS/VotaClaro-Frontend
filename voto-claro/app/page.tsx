@@ -1,4 +1,4 @@
-import { GeolocationMap } from "../components/maps";
+import { GeolocationMap } from '../components/maps';
 
 export default function HomePage() {
   // Estas coordenadas del API (ejemplo luego se remplazarán)
