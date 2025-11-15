@@ -10,7 +10,7 @@ interface NewsCardProps {
   image?: string;
   link?: string;
   pubDate?: string;
-  newsId?: number; // ID para navegación interna
+  newsId?: number; 
 }
 
 export function NewsCard({ title, description, type, image, link, pubDate, newsId }: NewsCardProps) {

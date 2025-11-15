@@ -116,3 +116,159 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .react-joyride__tooltip {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    font-family: inherit !important;
+  }
+
+  .react-joyride__overlay {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+  }
+
+  .react-joyride__spotlight {
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .react-joyride__button {
+    transition: all 0.2s ease !important;
+    font-weight: 500 !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    padding: 12px 24px !important;
+    margin: 0 6px !important;
+  }
+
+  .react-joyride__button--primary {
+    background-color: #3b82f6 !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .react-joyride__button--primary:hover {
+    background-color: #2563eb !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 10px rgba(59, 130, 246, 0.4) !important;
+  }
+
+  .react-joyride__button--secondary {
+    background-color: hsl(var(--secondary)) !important;
+    color: hsl(var(--secondary-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .react-joyride__button--secondary:hover {
+    background-color: hsl(var(--accent)) !important;
+    color: hsl(var(--accent-foreground)) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .react-joyride__button--skip {
+    background-color: transparent !important;
+    color: hsl(var(--muted-foreground)) !important;
+    border: none !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .react-joyride__button--skip:hover {
+    color: hsl(var(--foreground)) !important;
+    background-color: hsl(var(--accent)) !important;
+  }
+
+  .react-joyride__close {
+    width: 16px !important;
+    height: 16px !important;
+    background-color: hsl(var(--muted)) !important;
+    color: hsl(var(--muted-foreground)) !important;
+    border: none !important;
+    border-radius: 3px !important;
+    font-size: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    z-index: 1000 !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0.6 !important;
+  }
+
+  .react-joyride__close:hover {
+    background-color: hsl(var(--accent)) !important;
+    color: hsl(var(--accent-foreground)) !important;
+    transform: scale(1.2) !important;
+    opacity: 0.9 !important;
+  }
+
+  .dark .react-joyride__close {
+    background-color: hsl(var(--muted)) !important;
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  .dark .react-joyride__close:hover {
+    background-color: hsl(var(--accent)) !important;
+    color: hsl(var(--accent-foreground)) !important;
+  }
+
+  .react-joyride__footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin-top: 32px !important;
+    padding-top: 16px !important;
+    border-top: 1px solid hsl(var(--border) / 0.1) !important;
+  }
+
+  .react-joyride__beacon {
+    background-color: #3b82f6 !important;
+    border: 3px solid rgba(59, 130, 246, 0.3) !important;
+    animation: pulse-tour 2s infinite !important;
+  }
+
+  @keyframes pulse-tour {
+    0% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+
+  .react-joyride__tooltip .card {
+    border-radius: 12px !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .dark .react-joyride__tooltip .card {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  @media (max-width: 768px) {
+    .react-joyride__tooltip {
+      max-width: calc(100vw - 40px) !important;
+      margin: 20px !important;
+    }
+  }
+}
