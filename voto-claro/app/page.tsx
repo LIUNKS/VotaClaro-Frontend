@@ -19,7 +19,7 @@ import Joyride from 'react-joyride';
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"home" | "candidates" | "members" | "profile">("home");
   const { news, loading, error, refetch, lastUpdated } = useNews(4);
-  const { runTour, tourStep, handleTourCallback, startTour, resetTour, isClient } = useTour();
+  const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
   
   // Estado para rastrear el elemento activo del tour
   const [currentTourTarget, setCurrentTourTarget] = useState<string | null>(null);
