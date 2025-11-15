@@ -26,7 +26,8 @@
       "@/types/*": ["./app/types/*"],
       "@/utils/*": ["./app/utils/*"],
       "@/constants/*": ["./app/constants/*"],
-      "@/stores/*": ["./app/stores/*"]
+      "@/stores/*": ["./app/stores/*"],
+      "@/lib/*": ["./app/lib/*"]
     }
   },
   "include": [
