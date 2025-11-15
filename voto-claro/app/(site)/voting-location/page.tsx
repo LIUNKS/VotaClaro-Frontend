@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   ArrowLeft,
   MapPin,
@@ -9,7 +10,9 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import GeolocationMap from '@/components/maps/GeolocationMap';
+import { VotingLocationModal } from '@/components/ui/modal';
 import Link from 'next/link';
+import { getVotingLocationByDni, getDefaultVotingLocation, VotingLocationData } from '@/lib/mockData';
 
 // Datos de ejemplo para el local de votación
 const votingLocationData = {
@@ -228,7 +231,7 @@ export default function VotingLocationPage() {
                   Facilidades Disponibles
                 </h4>
                 <ul className="space-y-2">
-                  {votingLocationData.facilities.map((facility, index) => (
+                  {votingLocationData.facilities.map((facility: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
                       <span className="text-muted-foreground text-sm">
