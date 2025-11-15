@@ -22,11 +22,11 @@
       "@/*": ["./*"],
       "@/components/*": ["./components/*"],
       "@/hooks/*": ["./hooks/*"],
-      "@/services/*": ["./services/*"],
-      "@/types/*": ["./types/*"],
+      "@/services/*": ["./app/services/*"],
+      "@/types/*": ["./app/types/*"],
       "@/utils/*": ["./lib/*"],
-      "@/constants/*": ["./constants/*"],
-      "@/stores/*": ["./stores/*"],
+      "@/constants/*": ["./app/constants/*"],
+      "@/stores/*": ["./app/stores/*"],
       "@/lib/*": ["./lib/*"]
     }
   },
