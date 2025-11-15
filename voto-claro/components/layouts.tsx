@@ -1,5 +1,5 @@
 'use client';
-import { Bell } from 'lucide-react';
+import { Bell, HelpCircle } from 'lucide-react';
 import { ModeToggle } from './toogle-dark-mode';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -10,18 +10,23 @@ const navItems = [
   { name: 'Candidatos', href: '/candidates' },
 ];
 
-export function Header() {
+interface HeaderProps {
+  onStartTour?: () => void;
+  showTourButton?: boolean;
+}
+
+export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}) {
   const pathname = usePathname();
 
   return (
-    <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10">
+    <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10 tour-welcome">
       <div className="max-w-md lg:max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-foreground text-base lg:text-lg">Elecciones 2026</span>
         </div>
           
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-8">
+        <nav className="hidden lg:flex items-center space-x-8 tour-navigation">
           {navItems.map((item) => (
             <Link 
               key={item.href}
@@ -56,6 +61,15 @@ export function Header() {
         </nav>
           
         <div className="flex items-center gap-2">
+          {showTourButton && (
+            <button 
+              onClick={onStartTour}
+              className="p-1 hover:bg-muted rounded-full transition-colors"
+              title="Iniciar tour guiado"
+            >
+              <HelpCircle className="w-6 h-6 text-muted-foreground" />
+            </button>
+          )}
           <ModeToggle />
           <button className="p-1 hover:bg-muted rounded-full transition-colors">
             <Bell className="w-6 h-6 text-muted-foreground" />
