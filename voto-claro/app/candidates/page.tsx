@@ -16,9 +16,9 @@ import { useSearch, useScrollRestore } from '@/hooks';
 
 const tabs = [
   { id: 'presidenciales', label: 'Presidenciales', active: true },
-  { id: 'congresales', label: 'Congresales', active: false },
+  { id: 'diputados', label: 'Diputados', active: false },
   { id: 'senadores', label: 'Senadores', active: false },
-  { id: 'andino', label: 'P. Andino', active: false }
+  { id: 'andino', label: 'Parlamento Andino', active: false }
 ];
 
 export default function CandidatesPage() {
@@ -53,7 +53,7 @@ export default function CandidatesPage() {
     // Por ahora mostramos todos los candidatos, pero se podrá filtrar por categoría si habilitamos
     // const categoryMap = {
     //   'presidenciales': 'presidencial',
-    //   'congresales': 'congresista', 
+    //   'diputados': 'diputado', 
     //   'senadores': 'senador',
     //   'andino': 'andino'
     // };

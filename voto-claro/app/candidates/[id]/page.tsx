@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, use } from 'react';
-import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar, ExternalLink } from 'lucide-react';
+import React, { useState, use, useRef, useEffect } from 'react';
+import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar, ExternalLink, AlertTriangle, DollarSign, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +9,7 @@ import { BottomNavigation } from '@/components/ui/BottomNavigation';
 import { Footer } from '@/components/ui/Footer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCandidateById } from '@/lib/candidates-data';
+import personasData from '@/personas.json';
 
 interface CandidateDetailPageProps {
   params: Promise<{
@@ -25,12 +26,50 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
   const initialTab = fromPage === 'candidates' ? 'candidates' : 'home';
   
   const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>(initialTab);
-  const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas'>('biografia');
+  const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas' | 'antecedentes' | 'patrimonial'>('biografia');
+  
+  // Ref para el contenedor de tabs
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
   
   // Unwrap the params Promise using React.use()
   const resolvedParams = use(params);
   const candidateId = parseInt(resolvedParams.id);
   const candidate = getCandidateById(candidateId);
+  
+  // Obtener datos de personas
+  const personaData = personasData.ciudadano;
+
+  // Función para hacer scroll a la tab activa
+  const scrollToActiveTab = (tabName: string) => {
+    if (!tabsContainerRef.current) return;
+    
+    const container = tabsContainerRef.current;
+    const activeButton = container.querySelector(`button[data-tab="${tabName}"]`) as HTMLElement;
+    
+    if (activeButton) {
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = activeButton.getBoundingClientRect();
+      
+      const scrollLeft = container.scrollLeft + buttonRect.left - containerRect.left - 
+                        (containerRect.width / 2) + (buttonRect.width / 2);
+      
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Función para manejar el cambio de sección
+  const handleSectionChange = (section: typeof selectedSection) => {
+    setSelectedSection(section);
+    scrollToActiveTab(section);
+  };
+
+  // Scroll a la tab activa cuando cambie
+  useEffect(() => {
+    scrollToActiveTab(selectedSection);
+  }, [selectedSection]);
 
   if (!candidate) {
     return (
@@ -122,52 +161,95 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
               </div>
               
               <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-2">
-                {candidate.name}
+                {personaData.nombre_completo}
               </h2>
               
               <p className="text-muted-foreground mb-3">
                 {candidate.party}
               </p>
               
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-2">
                 {candidate.position}
               </Badge>
+              
+              <div className="text-sm text-muted-foreground">
+                DNI: {personaData.dni}
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Navigation Tabs */}
-        <div className="flex bg-muted rounded-lg p-1 mb-6">
-          <button
-            onClick={() => setSelectedSection('biografia')}
-            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              selectedSection === 'biografia'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+        <div className="bg-muted rounded-lg p-1 mb-6">
+          <div 
+            ref={tabsContainerRef}
+            className="flex gap-1 overflow-x-auto"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+            onScroll={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.setProperty('&::-webkit-scrollbar', 'display: none');
+            }}
           >
-            Hoja de Vida
-          </button>
-          <button
-            onClick={() => setSelectedSection('plan')}
-            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              selectedSection === 'plan'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Plan de Gobierno
-          </button>
-          <button
-            onClick={() => setSelectedSection('propuestas')}
-            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              selectedSection === 'propuestas'
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Propuestas
-          </button>
+            <button
+              data-tab="biografia"
+              onClick={() => handleSectionChange('biografia')}
+              className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                selectedSection === 'biografia'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Hoja de Vida
+            </button>
+            <button
+              data-tab="antecedentes"
+              onClick={() => handleSectionChange('antecedentes')}
+              className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                selectedSection === 'antecedentes'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Antecedentes
+            </button>
+            <button
+              data-tab="patrimonial"
+              onClick={() => handleSectionChange('patrimonial')}
+              className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                selectedSection === 'patrimonial'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Patrimonial
+            </button>
+            <button
+              data-tab="plan"
+              onClick={() => handleSectionChange('plan')}
+              className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                selectedSection === 'plan'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Plan de Gobierno
+            </button>
+            <button
+              data-tab="propuestas"
+              onClick={() => handleSectionChange('propuestas')}
+              className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                selectedSection === 'propuestas'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Propuestas
+            </button>
+          </div>
         </div>
 
         {/* Content Sections */}
@@ -183,15 +265,23 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
-                  <span className="text-muted-foreground">Edad</span>
-                  <span className="font-medium">{candidate.age} años</span>
+                  <span className="text-muted-foreground">DNI</span>
+                  <span className="font-medium">{personaData.dni}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
+                  <span className="text-muted-foreground">Fecha de Nacimiento</span>
+                  <span className="font-medium">{personaData.datos_personales.fecha_nacimiento}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
                     Lugar de Nacimiento
                   </span>
-                  <span className="font-medium">{candidate.birthPlace}</span>
+                  <span className="font-medium">{personaData.datos_personales.lugar_nacimiento}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
+                  <span className="text-muted-foreground">Distrito</span>
+                  <span className="font-medium">{personaData.datos_personales.distrito}</span>
                 </div>
               </CardContent>
             </Card>
@@ -205,45 +295,64 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {candidate.education.map((edu, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-start">
-                      <span className="text-muted-foreground">{edu.level}</span>
-                      <span className="font-medium text-right">{edu.institution}</span>
-                    </div>
-                    {edu.degree && (
-                      <div className="text-sm text-muted-foreground">
-                        {edu.degree}
-                      </div>
-                    )}
+                {personaData.formacion_academica.map((edu, index) => (
+                  <div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
+                    <div className="font-medium text-foreground">{edu.grado} en {edu.carrera}</div>
+                    <div className="text-sm text-muted-foreground">{edu.institucion}</div>
+                    <div className="text-xs text-muted-foreground">Año de finalización: {edu.anio_fin}</div>
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            {/* Experiencia Profesional */}
+            {/* Experiencia Laboral */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Briefcase className="w-5 h-5" />
-                  Experiencia Profesional
+                  Experiencia Laboral
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {candidate.experience.map((exp, index) => (
-                  <div key={index} className="space-y-2">
+                {personaData.experiencia_laboral.map((exp, index) => (
+                  <div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
                     <div className="flex justify-between items-start">
-                      <span className="text-sm text-muted-foreground">{exp.period}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {exp.desde} - {exp.hasta === '0000' ? 'Presente' : exp.hasta}
+                      </span>
                     </div>
-                    <div className="font-medium">{exp.position}</div>
-                    <div className="text-sm text-muted-foreground">{exp.company}</div>
-                    {exp.description && (
-                      <div className="text-sm text-muted-foreground mt-2">
-                        {exp.description}
-                      </div>
-                    )}
+                    <div className="font-medium text-foreground">{exp.cargo}</div>
+                    <div className="text-sm text-muted-foreground">{exp.organizacion}</div>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* Local de Votación */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <MapPin className="w-5 h-5" />
+                  Local de Votación
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-border">
+                  <span className="text-muted-foreground">Local</span>
+                  <span className="font-medium">{personaData.local_votacion.schoolName}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border">
+                  <span className="text-muted-foreground">Dirección</span>
+                  <span className="font-medium text-right">{personaData.local_votacion.address}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border">
+                  <span className="text-muted-foreground">Mesa</span>
+                  <span className="font-medium">{personaData.local_votacion.tableNumber}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground">Horario</span>
+                  <span className="font-medium">{personaData.local_votacion.hours}</span>
+                </div>
               </CardContent>
             </Card>
 
@@ -251,6 +360,146 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
             <div className="text-center text-xs text-muted-foreground">
               <p>Fuente: Jurado Nacional de Elecciones (JNE). Información pública oficial.</p>
             </div>
+          </div>
+        )}
+
+        {selectedSection === 'antecedentes' && (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <AlertTriangle className="w-5 h-5" />
+                  Antecedentes Judiciales
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {personaData.antecedentes.lista_sentencias.length > 0 ? (
+                  <div className="space-y-4">
+                    {personaData.antecedentes.lista_sentencias.map((sentencia, index) => (
+                      <div key={index} className="p-4 bg-muted/50 rounded-lg border border-border">
+                        <div className="flex items-start gap-3">
+                          <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                          <div className="space-y-2 flex-1">
+                            <div className="font-medium text-red-600 dark:text-red-100">
+                              {sentencia.caratula}
+                            </div>
+                            <div className="text-sm space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-foreground">Tipo:</span>
+                                <span className="text-foreground">{sentencia.tipo}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-foreground">Expediente:</span>
+                                <span className="text-foreground">{sentencia.expediente}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-foreground">Órgano:</span>
+                                <span className="text-foreground">{sentencia.organo_judicial}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-foreground">Situación:</span>
+                                <span className="text-foreground">{sentencia.situacion}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-foreground">Fecha:</span>
+                                <span className="text-foreground">{sentencia.fecha}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="w-8 h-8 text-green-600 dark:text-green-400" />
+                    </div>
+                    <p className="text-foreground font-medium">Sin antecedentes judiciales</p>
+                    <p className="text-muted-foreground text-sm">No se registran sentencias o procesos judiciales</p>
+                  </div>
+                )}
+                
+                {/* Fuente */}
+                <div className="text-center text-xs text-muted-foreground mt-6 pt-4 border-t border-border">
+                  <p>Fuente: Registro Nacional de Condenas (RNC) - Poder Judicial del Perú</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {selectedSection === 'patrimonial' && (
+          <div className="space-y-6">
+            {/* Ingresos */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <DollarSign className="w-5 h-5" />
+                  Declaración de Ingresos
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-border">
+                  <span className="text-muted-foreground">Total de Ingresos</span>
+                  <span className="font-medium text-green-600 dark:text-green-400">S/ {personaData.ingresos.total.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border">
+                  <span className="text-muted-foreground">Ingresos Públicos</span>
+                  <span className="font-medium">S/ {personaData.ingresos.publico.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted-foreground">Ingresos Privados</span>
+                  <span className="font-medium">S/ {personaData.ingresos.privado.toLocaleString()}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bienes */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Car className="w-5 h-5" />
+                  Declaración de Bienes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <div className="flex justify-between items-center py-2 border-b border-border">
+                    <span className="text-muted-foreground">Valor Total de Bienes</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">S/ {personaData.bienes.valor_total.toLocaleString()}</span>
+                  </div>
+                </div>
+                
+                {personaData.bienes.detalle_bienes.length > 0 && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Detalle de Bienes:</h4>
+                    {personaData.bienes.detalle_bienes.map((bien, index) => (
+                      <div key={index} className="p-3 bg-muted/50 rounded-lg">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-medium">{bien.tipo_bien}</span>
+                          <span className="text-sm font-medium">S/ {bien.valor.toLocaleString()}</span>
+                        </div>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <div>Modelo: {bien.modelo}</div>
+                          <div>Placa: {bien.placa}</div>
+                          {bien.comentario && (
+                            <div className="text-red-400 dark:text-red-400 text-xs mt-2 p-2 bg-muted/50 rounded">
+                              {bien.comentario}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Fuente */}
+                <div className="text-center text-xs text-muted-foreground mt-6 pt-4 border-t border-border">
+                  <p>Fuente: Declaración Jurada de Bienes y Rentas - JNE</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
