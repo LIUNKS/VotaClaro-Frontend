@@ -1,3 +1,4 @@
+import { ModeToggle } from '@/components/toogle-dark-mode';
 import { GeolocationMap } from '../components/maps';
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
             width="100%"
             height="500px"
           />
+          <ModeToggle />
         </div>
       </div>
     </main>
