@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState, use, useRef, useEffect } from 'react';
-import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar, ExternalLink, AlertTriangle, DollarSign, Car } from 'lucide-react';
-import { useState, use } from 'react';
-import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar } from 'lucide-react';
+import { ArrowLeft, Share2, MapPin, GraduationCap, Briefcase, Calendar, AlertTriangle, DollarSign, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,8 +22,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
   
   // Ref para el contenedor de tabs
   const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas'>('biografia');
-  
   // Unwrap the params Promise using React.use()
   const resolvedParams = use(params);
   const candidateId = parseInt(resolvedParams.id);
