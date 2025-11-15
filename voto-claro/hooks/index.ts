@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 
 export { useIsMobile } from './use-mobile';
 export { useNews } from './useNews';
+export { useScrollRestore } from './useScrollRestore';
+export { useTour } from './useTour';
+export { useSearch } from './useSearch';
 
 // Hook para geolocalización
 export const useGeolocation = () => {
