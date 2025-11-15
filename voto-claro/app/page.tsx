@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Calendar, ArrowRight, HelpCircle, Vote, Newspaper, Users, MapPin, CalendarDays, Navigation } from "lucide-react";
+import { Bell, Calendar, ArrowRight, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
