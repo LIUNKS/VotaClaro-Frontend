@@ -26,10 +26,8 @@ export default function HomePage() {
 
   // Función helper para determinar si un elemento debe tener opacidad
   const shouldApplyOpacity = (elementClass: string) => {
-    if (!runTour || !currentTourTarget) return false;
-    return currentTourTarget !== elementClass;
+    return runTour && currentTourTarget && currentTourTarget !== elementClass;
   };
-
   // Función para obtener estilos según el tema
   const getTourStyles = () => {
     const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
