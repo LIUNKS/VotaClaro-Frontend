@@ -1,22 +1,21 @@
+'use client';
 
-"use client";
-
-import { Home, Users, GraduationCap, User } from "lucide-react";
+import { Home, Users, GraduationCap, User } from 'lucide-react';
 
 interface BottomNavigationProps {
-  activeTab?: "home" | "candidates" | "members" | "profile";
-  onTabChange?: (tab: "home" | "candidates" | "members" | "profile") => void;
+  activeTab?: 'home' | 'candidates' | 'members' | 'profile';
+  onTabChange?: (tab: 'home' | 'candidates' | 'members' | 'profile') => void;
 }
 
 export function BottomNavigation({ 
-  activeTab = "home", 
+  activeTab = 'home', 
   onTabChange 
 }: BottomNavigationProps) {
   const navItems = [
-    { id: "home", icon: Home, label: "Inicio" },
-    { id: "candidates", icon: Users, label: "Candidatos" },
-    { id: "members", icon: GraduationCap, label: "Miembros" },
-    { id: "profile", icon: User, label: "Perfil" },
+    { id: 'home', icon: Home, label: 'Inicio' },
+    { id: 'candidates', icon: Users, label: 'Candidatos' },
+    { id: 'members', icon: GraduationCap, label: 'Miembros' },
+    { id: 'profile', icon: User, label: 'Perfil' },
   ] as const;
 
   return (
@@ -33,12 +32,12 @@ export function BottomNavigation({
               >
                 <Icon 
                   className={`w-6 h-6 ${
-                    isActive ? "text-primary" : "text-muted-foreground"
+                    isActive ? 'text-primary' : 'text-muted-foreground'
                   }`} 
                 />
                 <span 
                   className={`text-xs font-medium ${
-                    isActive ? "text-primary" : "text-muted-foreground"
+                    isActive ? 'text-primary' : 'text-muted-foreground'
                   }`}
                 >
                   {label}
