@@ -12,7 +12,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { candidatesData, type Candidate } from '@/lib/candidates-data';
-import { useSearch } from '@/hooks';
+import { useSearch, useScrollRestore } from '@/hooks';
 
 const tabs = [
   { id: 'presidenciales', label: 'Presidenciales', active: true },
@@ -25,6 +25,15 @@ export default function CandidatesPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('presidenciales');
   const [activeNavTab, setActiveNavTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>('candidates');
+
+  // Hook para restaurar la posición del scroll
+  const { saveScrollPosition } = useScrollRestore({ 
+    key: 'candidates',
+    behavior: 'smooth',
+    delay: 300,
+    duration: 1000,
+    easing: 'ease-out'
+  });
 
   // Hook de búsqueda
   const { 
@@ -52,6 +61,8 @@ export default function CandidatesPage() {
   };
 
   const handleCandidateClick = (candidateId: number) => {
+    // Guardar posición manualmente antes de navegar
+    saveScrollPosition();
     router.push(`/candidates/${candidateId}?from=candidates`);
   };
 

@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import { useScrollRestore } from '@/hooks';
 
 interface NewsCardProps {
   title: string;
@@ -15,9 +16,12 @@ interface NewsCardProps {
 
 export function NewsCard({ title, description, type, image, link, pubDate, newsId }: NewsCardProps) {
   const router = useRouter();
+  const { saveScrollPosition } = useScrollRestore({ key: 'home' });
 
   const handleClick = () => {
     if (newsId !== undefined) {
+      // Usar la función del hook
+      saveScrollPosition();
       router.push(`/noticias/${newsId}?from=home`);
     }
   };

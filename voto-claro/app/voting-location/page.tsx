@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   ArrowLeft,
@@ -7,38 +7,38 @@ import {
   Phone,
   Clock,
   Users,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import GeolocationMap from "@/components/maps/GeolocationMap";
-import Link from "next/link";
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import GeolocationMap from '@/components/maps/GeolocationMap';
+import Link from 'next/link';
 
 // Datos de ejemplo para el local de votación
 const votingLocationData = {
-  schoolName: "Colegio Nacional San José",
-  address: "Av. Principal 123, Miraflores, Lima",
-  tableNumber: "012345",
+  schoolName: 'Colegio Nacional San José',
+  address: 'Av. Principal 123, Miraflores, Lima',
+  tableNumber: '012345',
   latitude: -12.1203,
   longitude: -77.0282,
-  phone: "+51 1 234-5678",
-  hours: "8:00 AM - 6:00 PM",
-  capacity: "350 votantes",
+  phone: '+51 1 234-5678',
+  hours: '8:00 AM - 6:00 PM',
+  capacity: '350 votantes',
   facilities: [
-    "Acceso para personas con discapacidad",
-    "Estacionamiento disponible",
-    "Transporte público cercano",
-    "Servicio de agua y baños",
+    'Acceso para personas con discapacidad',
+    'Estacionamiento disponible',
+    'Transporte público cercano',
+    'Servicio de agua y baños',
   ],
 };
 
 export default function VotingLocationPage() {
   const openInGoogleMaps = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${votingLocationData.latitude},${votingLocationData.longitude}`;
-    window.open(url, "_blank");
+    window.open(url, '_blank');
   };
 
   const openInWaze = () => {
     const url = `https://waze.com/ul?ll=${votingLocationData.latitude},${votingLocationData.longitude}&navigate=yes`;
-    window.open(url, "_blank");
+    window.open(url, '_blank');
   };
 
   return (

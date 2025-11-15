@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { Footer } from '@/components/ui/Footer';
 import { ModeToggle } from '@/components/toogle-dark-mode';
 import { NewsError } from '@/components/ui/NewsError';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { useNews, useSearch } from '@/hooks';
+import { useNews, useSearch, useScrollRestore } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { NewsCardData } from '@/app/services/newsService';
@@ -20,6 +20,33 @@ export default function NoticiasPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>('noticias');
   const itemsPerPage = 10;
+
+  // Hook para manejar scroll restore con animación suave
+  const { saveScrollPosition } = useScrollRestore({ 
+    key: 'noticias',
+    behavior: 'smooth',
+    delay: 150 
+  });
+  
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('noticias-scroll-position');
+    if (savedScrollPosition) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+        sessionStorage.removeItem('noticias-scroll-position');
+      }, 100);
+    }
+  }, []);
+
+  // Guardar posición del scroll antes de navegar
+  useEffect(() => {
+    const saveScrollPosition = () => {
+      sessionStorage.setItem('noticias-scroll-position', window.scrollY.toString());
+    };
+
+    window.addEventListener('beforeunload', saveScrollPosition);
+    return () => window.removeEventListener('beforeunload', saveScrollPosition);
+  }, []);
 
   const handleSearchChange = useCallback(() => {
     setCurrentPage(1);
@@ -82,6 +109,8 @@ export default function NoticiasPage() {
   };
 
   const handleNewsClick = (index: number, link?: string) => {
+    // Guardar posición manualmente antes de navegar
+    saveScrollPosition();
     router.push(`/noticias/${index}?from=noticias`);
   };
 

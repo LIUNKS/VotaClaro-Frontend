@@ -5,13 +5,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getFeaturedCandidates } from '@/lib/candidates-data';
+import { useScrollRestore } from '@/hooks';
 
 export function CandidatesGrid() {
   const candidates = getFeaturedCandidates(3);
   const router = useRouter();
 
+  const { saveScrollPosition } = useScrollRestore({ key: 'home' });
+
   const handleCandidateClick = (candidateId: number, e: React.MouseEvent) => {
     e.preventDefault();
+    // Usar la función del hook
+    saveScrollPosition();
     router.push(`/candidates/${candidateId}?from=home`);
   };
 

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
-
 // Exportar hooks personalizados
 
 export { useMobile } from './use-mobile';
 export { useNews } from './useNews';
 export { useSearch } from './useSearch';
+export { useScrollRestore } from './useScrollRestore';
 
 // Hook para geolocalización
 export const useGeolocation = () => {
