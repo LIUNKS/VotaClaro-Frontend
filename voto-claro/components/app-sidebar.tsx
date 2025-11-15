@@ -59,12 +59,12 @@ const data = {
       items: [
         {
           title: 'Noticias',
-          url: '#',
+          url: '/onpe/noticias',
           
         },
         {
           title: 'candidatos',
-          url: '#',
+          url: '/onpe/candidatos',
         },
       ],
     },
