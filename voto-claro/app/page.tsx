@@ -1,44 +1,44 @@
-"use client";
+'use client';
 
-import { Bell, Calendar, ArrowRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { NewsCard, VotingLocation, CandidatesGrid } from "@/components/home";
-import { BottomNavigation } from "@/components/ui/BottomNavigation";
-import { Footer } from "@/components/ui/Footer";
+import { Bell, Calendar, ArrowRight } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { NewsCard, VotingLocation, CandidatesGrid } from '@/components/home';
+import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { Footer } from '@/components/ui/Footer';
 import { ModeToggle } from '@/components/toogle-dark-mode';
-import { NewsSkeleton } from "@/components/ui/NewsSkeleton";
-import { NewsError } from "@/components/ui/NewsError";
-import { useNews } from "@/hooks";
-import { useState } from "react";
-import Link from "next/link";
+import { NewsSkeleton } from '@/components/ui/NewsSkeleton';
+import { NewsError } from '@/components/ui/NewsError';
+import { useNews } from '@/hooks';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<"home" | "candidates" | "members" | "profile">("home");
+  const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>('home');
   const { news, loading, error, refetch, lastUpdated } = useNews(4);
 
   // Fallback data if no news loaded yet
   const fallbackNews = [
     {
-      title: "Se confirma la fecha límite para la inscripción de candidatos.",
-      description: "Mantente informado",
-      type: "gradient" as const,
-      category: "Elecciones",
+      title: 'Se confirma la fecha límite para la inscripción de candidatos.',
+      description: 'Mantente informado',
+      type: 'gradient' as const,
+      category: 'Elecciones',
       image: undefined,
       link: undefined,
       pubDate: new Date().toISOString(),
-      creator: "Equipo VotaClaro",
-      contentEncoded: "Mantente informado sobre las fechas importantes del proceso electoral.",
+      creator: 'Equipo VotaClaro',
+      contentEncoded: 'Mantente informado sobre las fechas importantes del proceso electoral.',
     },
     {
-      title: "Nuevas medidas para el día de las elecciones",
-      description: "Mantente informado sobre los nuevos protocolos",
-      category: "Elecciones",
-      type: "image" as const,
-      image: "/api/placeholder/80/80",
+      title: 'Nuevas medidas para el día de las elecciones',
+      description: 'Mantente informado sobre los nuevos protocolos',
+      category: 'Elecciones',
+      type: 'image' as const,
+      image: '/api/placeholder/80/80',
       link: undefined,
       pubDate: new Date().toISOString(),
-      creator: "Equipo VotaClaro",
-      contentEncoded: "Conoce los nuevos protocolos de seguridad para el día de las elecciones.",
+      creator: 'Equipo VotaClaro',
+      contentEncoded: 'Conoce los nuevos protocolos de seguridad para el día de las elecciones.',
     },
   ];
 
@@ -56,42 +56,44 @@ export default function HomePage() {
           
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <button 
-              onClick={() => setActiveTab("home")}
+            <Link 
+              href="/"
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "home" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                activeTab === 'home' 
+                  ? 'bg-primary/10 text-primary' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
               Inicio
-            </button>
-            <button 
-              onClick={() => setActiveTab("candidates")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "candidates" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
+            </Link>
+            <Link 
+              href="/noticias"
+              className="px-4 py-2 rounded-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              Noticias
+            </Link>
+            <Link 
+              href="/candidates"
+              className="px-4 py-2 rounded-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
               Candidatos
-            </button>
+            </Link>
             <button 
-              onClick={() => setActiveTab("members")}
+              onClick={() => setActiveTab('members')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "members" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                activeTab === 'members' 
+                  ? 'bg-primary/10 text-primary' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
               Miembros
             </button>
             <button 
-              onClick={() => setActiveTab("profile")}
+              onClick={() => setActiveTab('profile')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === "profile" 
-                  ? "bg-primary/10 text-primary" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                activeTab === 'profile' 
+                  ? 'bg-primary/10 text-primary' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
               Perfil
@@ -160,9 +162,9 @@ export default function HomePage() {
                     <div className="text-center mt-6 space-y-3">
                       <Link 
                         href="/noticias"
-                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 hover:bg-primary/5 rounded-lg transition-colors group"
+                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors group"
                       >
-                        Ver más noticias
+                        Ver todas las noticias
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
