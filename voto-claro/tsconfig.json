@@ -25,7 +25,6 @@
       "@/services/*": ["./services/*"],
       "@/types/*": ["./types/*"],
       "@/utils/*": ["./lib/*"],
-      "@/utils/*": ["./utils/*"],
       "@/constants/*": ["./constants/*"],
       "@/stores/*": ["./stores/*"],
       "@/lib/*": ["./lib/*"]
