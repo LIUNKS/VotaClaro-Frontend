@@ -69,6 +69,7 @@ export function VotingLocationModal({ isOpen, onClose, onDniSubmit }: VotingLoca
             onClick={onClose}
             className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"
             disabled={isLoading}
+            aria-label="Cerrar modal"
           >
             <X className="h-4 w-4 text-muted-foreground" />
           </button>
