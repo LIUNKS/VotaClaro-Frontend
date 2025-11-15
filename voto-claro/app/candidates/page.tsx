@@ -10,6 +10,7 @@ import { Footer } from '@/components/ui/Footer';
 import { ModeToggle } from '@/components/toogle-dark-mode';
 import { SearchBar } from '@/components/ui/SearchBar';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { candidatesData, type Candidate } from '@/lib/candidates-data';
 import { useSearch } from '@/hooks';
 
@@ -21,6 +22,7 @@ const tabs = [
 ];
 
 export default function CandidatesPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('presidenciales');
   const [activeNavTab, setActiveNavTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>('candidates');
 
@@ -47,6 +49,10 @@ export default function CandidatesPage() {
     //   'andino': 'andino'
     // };
     // const filteredByCategory = getCandidatesByCategory(categoryMap[tabId]);
+  };
+
+  const handleCandidateClick = (candidateId: number) => {
+    router.push(`/candidates/${candidateId}?from=candidates`);
   };
 
   return (
@@ -149,7 +155,7 @@ export default function CandidatesPage() {
         <div className="mb-6">
           <p className="text-sm text-muted-foreground">
             {searchTerm 
-              ? `${resultsCount} candidato(s) encontrado(s) para "${searchTerm}"`
+              ? `${resultsCount} candidato(s) encontrado(s) para '${searchTerm}'`
               : `${resultsCount} candidatos disponibles`
             }
           </p>
@@ -158,7 +164,11 @@ export default function CandidatesPage() {
         {/* Candidates List */}
         <div className="space-y-3">
           {filteredCandidates.map((candidate) => (
-            <Card key={candidate.id} className="p-4 hover:shadow-md transition-shadow cursor-pointer">
+            <Card 
+              key={candidate.id} 
+              className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => handleCandidateClick(candidate.id)}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-12 w-12">

@@ -27,6 +27,9 @@ export function BottomNavigation({
     if (pathname === '/') return 'home';
     if (pathname === '/noticias') return 'noticias';
     if (pathname === '/candidates') return 'candidates';
+
+    if (pathname.startsWith('/candidates/') && activeTab === 'home') return 'home';
+    if (pathname.startsWith('/candidates/')) return 'candidates';
     return activeTab;
   };
 

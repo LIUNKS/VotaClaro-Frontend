@@ -3,10 +3,17 @@
 import { Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getFeaturedCandidates } from '@/lib/candidates-data';
 
 export function CandidatesGrid() {
   const candidates = getFeaturedCandidates(3);
+  const router = useRouter();
+
+  const handleCandidateClick = (candidateId: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push(`/candidates/${candidateId}?from=home`);
+  };
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
@@ -20,8 +27,12 @@ export function CandidatesGrid() {
 
         <div className="space-y-3 lg:space-y-4">
           {candidates.map((candidate) => (
-            <Link key={candidate.id} href="/candidates" className="block">
-              <div className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+            <div 
+              key={candidate.id} 
+              onClick={(e) => handleCandidateClick(candidate.id, e)}
+              className="block cursor-pointer"
+            >
+              <div className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                 <div className="w-12 h-12 lg:w-14 lg:h-14 bg-muted rounded-full overflow-hidden">
                   <img
                     src={candidate.image}
@@ -49,7 +60,7 @@ export function CandidatesGrid() {
                   </p>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
