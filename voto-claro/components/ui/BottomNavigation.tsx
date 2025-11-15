@@ -20,7 +20,7 @@ export function BottomNavigation({
   ] as const;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-area-pb">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-area-pb">
       <div className="max-w-md mx-auto px-4 py-2">
         <div className="flex justify-around items-center">
           {navItems.map(({ id, icon: Icon, label }) => {
@@ -33,12 +33,12 @@ export function BottomNavigation({
               >
                 <Icon 
                   className={`w-6 h-6 ${
-                    isActive ? "text-blue-600" : "text-gray-400"
+                    isActive ? "text-primary" : "text-muted-foreground"
                   }`} 
                 />
                 <span 
                   className={`text-xs font-medium ${
-                    isActive ? "text-blue-600" : "text-gray-400"
+                    isActive ? "text-primary" : "text-muted-foreground"
                   }`}
                 >
                   {label}
