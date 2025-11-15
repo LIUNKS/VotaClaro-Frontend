@@ -6,9 +6,9 @@ export default function HomePage() {
   const exampleLongitude = -77.065698;
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="rounded-xl shadow-lg p-6">
           <GeolocationMap
             latitude={exampleLatitude}
             longitude={exampleLongitude}
