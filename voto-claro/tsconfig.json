@@ -24,7 +24,7 @@
       "@/hooks/*": ["./hooks/*"],
       "@/services/*": ["./app/services/*"],
       "@/types/*": ["./app/types/*"],
-      "@/utils/*": ["./app/utils/*"],
+      "@/utils/*": ["./lib/*"],
       "@/constants/*": ["./app/constants/*"],
       "@/stores/*": ["./app/stores/*"],
       "@/lib/*": ["./lib/*"]

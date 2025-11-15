@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { NewsCard, VotingLocation, CandidatesGrid } from "@/components/home";
 import { BottomNavigation } from "@/components/ui/BottomNavigation";
 import { Footer } from "@/components/ui/Footer";
+import { ModeToggle } from '@/components/toogle-dark-mode';
 import { useState } from "react";
 
 export default function HomePage() {
@@ -26,12 +27,12 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-8 py-4 sticky top-0 z-10">
         <div className="max-w-md lg:max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-800 text-base lg:text-lg">Elecciones 2026</span>
+            <span className="font-semibold text-gray-800 dark:text-gray-200 text-base lg:text-lg">Elecciones 2026</span>
           </div>
           
           {/* Desktop Navigation */}
@@ -40,8 +41,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("home")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "home" 
-                  ? "bg-blue-100 text-blue-600" 
-                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               Inicio
@@ -50,8 +51,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("candidates")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "candidates" 
-                  ? "bg-blue-100 text-blue-600" 
-                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               Candidatos
@@ -60,8 +61,8 @@ export default function HomePage() {
               onClick={() => setActiveTab("members")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "members" 
-                  ? "bg-blue-100 text-blue-600" 
-                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               Miembros
@@ -70,17 +71,20 @@ export default function HomePage() {
               onClick={() => setActiveTab("profile")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "profile" 
-                  ? "bg-blue-100 text-blue-600" 
-                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300" 
+                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               Perfil
             </button>
           </nav>
           
-          <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <Bell className="w-6 h-6 text-gray-600" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ModeToggle />
+            <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+              <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -91,7 +95,7 @@ export default function HomePage() {
           <div className="lg:col-span-8 space-y-6">
             {/* Noticias Recientes */}
             <section>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4 lg:mb-6">Noticias Recientes</h1>
+              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4 lg:mb-6">Noticias Recientes</h1>
               
               <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
                 {newsItems.map((news, index) => (
@@ -124,12 +128,12 @@ export default function HomePage() {
             <section>
               <Card>
                 <CardContent className="p-4 lg:p-6">
-                  <div className="w-full h-32 lg:h-40 bg-yellow-50 rounded-lg mb-4 flex items-center justify-center">
-                    <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600" />
+                  <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
+                    <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
                   </div>
                   
-                  <h3 className="font-semibold text-gray-800 mb-2 text-base lg:text-lg">Calendario Electoral</h3>
-                  <p className="text-sm lg:text-base text-gray-600">No te pierdas las fechas importantes</p>
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-base lg:text-lg">Calendario Electoral</h3>
+                  <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300">No te pierdas las fechas importantes</p>
                 </CardContent>
               </Card>
             </section>
@@ -138,7 +142,7 @@ export default function HomePage() {
             <section>
               <Card>
                 <CardContent className="p-4 lg:p-6">
-                  <div className="w-full h-32 lg:h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                  <div className="w-full h-32 lg:h-40 bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 overflow-hidden">
                     <img 
                       src="/api/placeholder/300/120"
                       alt="Miembro de mesa"
@@ -154,8 +158,8 @@ export default function HomePage() {
                     />
                   </div>
                   
-                  <h3 className="font-semibold text-gray-800 mb-2 text-base lg:text-lg">Soy Miembro de Mesa</h3>
-                  <p className="text-sm lg:text-base text-gray-600">Capacitación y materiales</p>
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2 text-base lg:text-lg">Soy Miembro de Mesa</h3>
+                  <p className="text-sm lg:text-base text-gray-600 dark:text-gray-300">Capacitación y materiales</p>
                 </CardContent>
               </Card>
             </section>
