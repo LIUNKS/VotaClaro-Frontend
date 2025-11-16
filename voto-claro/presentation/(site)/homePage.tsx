@@ -22,6 +22,7 @@ import { useTour } from '@/hooks/useTour';
 import { useTourContext } from '@/hooks/useTourContext';
 import { useNews } from '@/hooks';
 import { useCandidates } from '@/core/modules/candidates/hooks/useCandidates';
+import { WelcomeIntro } from '@/components/animations';
 
 export default function HomePage() {
 	const { runTour, tourStep, handleTourCallback, startTour, isClient } =
@@ -32,6 +33,11 @@ export default function HomePage() {
 	);
 	const { news, loading, error } = useNews(4);
 	const [partidos, setPartidos] = useState([]);
+	const [showContent, setShowContent] = useState(false);
+	const [introComplete, setIntroComplete] = useState(false);
+
+	// Variable de entorno para forzar mostrar intro (desarrollo)
+	const forceShowIntro = process.env.NEXT_PUBLIC_SHOW_INTRO === 'true';
 
 	const {
 		loading: candidatesLoading,
@@ -61,6 +67,14 @@ export default function HomePage() {
 		setTourConfig({ onStartTour: startTour, showTourButton: true });
 		return () => setTourConfig({ showTourButton: false });
 	}, [setTourConfig, startTour]);
+
+	// Manejar completado de intro
+	const handleIntroComplete = () => {
+		setIntroComplete(true);
+		setTimeout(() => {
+			setShowContent(true);
+		}, 100);
+	};
 
 	const shouldApplyOpacity = (elementClass: string) => {
 		return runTour && currentTourTarget && currentTourTarget !== elementClass;
@@ -542,7 +556,11 @@ export default function HomePage() {
 
 	return (
 		<>
-			{isClient && (
+			{!introComplete && (
+				<WelcomeIntro onComplete={handleIntroComplete} forceShow={forceShowIntro} />
+			)}
+			
+			{isClient && showContent && (
 				<Joyride
 					steps={tourSteps}
 					run={runTour}
@@ -647,7 +665,7 @@ export default function HomePage() {
 							<Link href="/miembro-mesa" className="block group">
 								<Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
 									<CardContent className="p-4 lg:p-8">
-										<div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
+										<div className="w-full h-32 lg:h-40 bg-linear-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
 											<BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
 										</div>
 										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">

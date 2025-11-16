@@ -107,7 +107,6 @@ const GeolocationMap: React.FC<GeolocationMapProps> = ({
 		}
 	}, [state.mounted, initializeMap]);
 
-
 	useEffect(() => {
 		setState(prev => ({ ...prev, mounted: true }));
 	}, []);
