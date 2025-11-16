@@ -6,13 +6,12 @@ import { usePathname } from 'next/navigation';
 import { useTourContext } from '@/hooks/useTourContext';
 import LogoAnimation from './animations/logo-draw';
 import { useTheme } from 'next-themes';
-import * as React from 'react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { useEffect, useState } from 'react';
 
 interface HeaderProps {
   onStartTour?: () => void;
@@ -23,9 +22,11 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
   const pathname = usePathname();
   const tourContext = useTourContext();
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [openDesktop, setOpenDesktop] = useState(false);
+  const [openMobile, setOpenMobile] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
   
@@ -75,8 +76,8 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
               {item.name}
             </Link>
           ))}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Popover modal={false} open={openDesktop} onOpenChange={setOpenDesktop}>
+            <PopoverTrigger asChild>
               <button className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                 getActiveTab() === 'mas'
                   ? 'bg-primary/10 text-primary' 
@@ -85,46 +86,38 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
                 Más
                 <ChevronDown className="w-4 h-4" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start" className="flex gap-2 p-2 bg-card border rounded-lg shadow-lg">
-              <DropdownMenuItem asChild className="p-0">
-                <Link href="/miembro-mesa" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-blue-500">
-                  <Users className="w-4 h-4" />
-                  Miembro Mesa
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="p-0">
-                <Link href="/voting-location" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-green-500">
-                  <MapPin className="w-4 h-4" />
-                  Ubicación de Voto
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </PopoverTrigger>
+            <PopoverContent side="top" align="start" className="flex flex-col gap-1 p-2 bg-card border rounded-lg shadow-lg">
+              <Link href="/miembro-mesa" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-blue-500" onClick={() => setOpenDesktop(false)}>
+                <Users className="w-4 h-4" />
+                Miembro Mesa
+              </Link>
+              <Link href="/voting-location" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-green-500" onClick={() => setOpenDesktop(false)}>
+                <MapPin className="w-4 h-4" />
+                Ubicación de Voto
+              </Link>
+            </PopoverContent>
+          </Popover>
         </nav>
           
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Popover modal={false} open={openMobile} onOpenChange={setOpenMobile}>
+            <PopoverTrigger asChild>
               <button className="px-2 py-1 hover:bg-muted rounded-md transition-colors lg:hidden flex items-center gap-1 text-xs" title="Más opciones">
                 <Menu className="w-5 h-5 text-muted-foreground" />
               </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="flex flex-col gap-1 p-2 bg-card border rounded-lg shadow-lg lg:flex-row lg:gap-2">
-              <DropdownMenuItem asChild className="p-0">
-                <Link href="/miembro-mesa" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-blue-500">
-                  <Users className="w-4 h-4" />
-                  Miembro Mesa
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="p-0">
-                <Link href="/voting-location" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-green-500">
-                  <MapPin className="w-4 h-4" />
-                  Ubicación de Voto
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </PopoverTrigger>
+            <PopoverContent side="top" align="center" className="flex flex-col gap-1 p-2 bg-card border rounded-lg shadow-lg">
+              <Link href="/miembro-mesa" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-blue-500" onClick={() => setOpenMobile(false)}>
+                <Users className="w-4 h-4" />
+                Miembro Mesa
+              </Link>
+              <Link href="/voting-location" className="flex items-center gap-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-md transition-colors text-green-500" onClick={() => setOpenMobile(false)}>
+                <MapPin className="w-4 h-4" />
+                Ubicación de Voto
+              </Link>
+            </PopoverContent>
+          </Popover>
           {finalShowTourButton && (
             <button 
               onClick={finalOnStartTour}
