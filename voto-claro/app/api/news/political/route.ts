@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RSSNewsItem, NewsResponse } from '@/services/newsService';
+import fs from 'fs/promises';
+import path from 'path';
 
 const RSS_URL = 'https://elcomercio.pe/arc/outboundfeeds/rss/category/politica/?outputType=xml';
 
@@ -36,11 +38,11 @@ function parseRSSXML(xmlString: string): RSSNewsItem[] {
 				const hasCreator = itemXML.includes('dc:creator');
 				const hasContentEncoded = itemXML.includes('content:encoded');
 				if (hasCreator) {
-					const creatorMatch = itemXML.match(/<dc:creator[^>]*>(.*?)<\/dc:creator>/si);
+					const _creatorMatch = itemXML.match(/<dc:creator[^>]*>(.*?)<\/dc:creator>/si);
 				}
         
 				if (hasContentEncoded) {
-					const contentMatch = itemXML.match(/<content:encoded[^>]*>(.*?)<\/content:encoded>/si);
+					const _contentMatch = itemXML.match(/<content:encoded[^>]*>(.*?)<\/content:encoded>/si);
 				}
         
 				// Buscar directamente la URL en el XML raw
@@ -98,12 +100,12 @@ function parseRSSXML(xmlString: string): RSSNewsItem[] {
 			}
 		}
     
-		// Log de resumen CON URLS COMPLETAS
-		const itemsWithImages = items.filter(item => item.image).length;
+	// Log de resumen CON URLS COMPLETAS
+	const _itemsWithImages = items.filter(item => item.image).length;
 
 		const categories = [...new Set(items.map(item => item.category))];
 		categories.forEach(cat => {
-			const count = items.filter(item => item.category === cat).length;
+			const _count = items.filter(item => item.category === cat).length;
 		});
 
 		return items;
@@ -153,15 +155,16 @@ function cleanText(text: string): string {
 /**
  * GET handler for political news
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
+	const headers = {
+		'Access-Control-Allow-Origin': '*',
+		'Access-Control-Allow-Methods': 'GET',
+		'Access-Control-Allow-Headers': 'Content-Type',
+		'Content-Type': 'application/json',
+		'Cache-Control': 'public, max-age=300',
+	};
+
 	try {
-		const headers = {
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'GET',
-			'Access-Control-Allow-Headers': 'Content-Type',
-			'Content-Type': 'application/json',
-			'Cache-Control': 'public, max-age=300',
-		};
 
 		const rssResponse = await fetch(RSS_URL, {
 			headers: {
@@ -178,20 +181,20 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 		const xmlContent = await rssResponse.text();
     
-    if (!xmlContent || xmlContent.trim().length === 0) {
-      throw new Error('Empty RSS content received');
-    }
+		if (!xmlContent || xmlContent.trim().length === 0) {
+			throw new Error('Empty RSS content received');
+		}
 
-    console.log('RSS content length:', xmlContent.length);
+		console.log('RSS content length:', xmlContent.length);
 
-    // Parse RSS content
-    const newsItems = parseRSSXML(xmlContent);
+		// Parse RSS content
+		const newsItems = parseRSSXML(xmlContent);
     
-    console.log('Parsed news items:', newsItems.length);
+		console.log('Parsed news items:', newsItems.length);
 
-    if (newsItems.length === 0) {
-      console.warn('No news items parsed from RSS feed');
-    }
+		if (newsItems.length === 0) {
+			console.warn('No news items parsed from RSS feed');
+		}
 
 		const response: NewsResponse = {
 			success: true,
@@ -199,25 +202,52 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			lastUpdated: new Date().toISOString(),
 		};
 
+		// Save a server-side cache file so we can return cached data if the RSS source fails later
+		try {
+			const cacheDir = path.join(process.cwd(), '.cache');
+			await fs.mkdir(cacheDir, { recursive: true });
+			const cacheFile = path.join(cacheDir, 'political-news.json');
+			await fs.writeFile(cacheFile, JSON.stringify(response), 'utf8');
+		} catch (cacheErr) {
+			console.warn('Could not write news cache file:', cacheErr);
+		}
+
 		return NextResponse.json(response, { headers });
 
 	} catch (error) {
 		console.error('Error in political news API:', error);
-    
-		const errorResponse: NewsResponse = {
-			success: false,
-			data: [],
-			error: error instanceof Error ? error.message : 'Failed to fetch political news',
-			lastUpdated: new Date().toISOString(),
-		};
+		// On error, try to return cached data from the server-side cache if available.
+		try {
+			const cacheFile = path.join(process.cwd(), '.cache', 'political-news.json');
+			const raw = await fs.readFile(cacheFile, 'utf8');
+			const cached: NewsResponse = JSON.parse(raw);
+			// Mark offline so clients can show the appropriate UI
+			const offlineResponse: NewsResponse & { offline?: boolean } = {
+				...cached,
+				success: cached.success ?? false,
+				offline: true,
+			};
 
-		return NextResponse.json(errorResponse, {
-			status: 500,
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-			}
-		});
+			return NextResponse.json(offlineResponse, { headers });
+		} catch (readErr) {
+			console.warn('No server-side cache available or failed to read it:', readErr);
+
+			const errorResponse: NewsResponse & { offline?: boolean } = {
+				success: false,
+				data: [],
+				error: error instanceof Error ? error.message : 'Failed to fetch political news',
+				lastUpdated: new Date().toISOString(),
+				offline: true,
+			};
+
+			return NextResponse.json(errorResponse, {
+				status: 200,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+				}
+			});
+		}
 	}
 }
 
