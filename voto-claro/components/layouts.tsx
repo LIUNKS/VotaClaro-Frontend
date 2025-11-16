@@ -3,6 +3,7 @@ import { Bell, HelpCircle } from 'lucide-react';
 import { ModeToggle } from './toogle-dark-mode';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTourContext } from '@/hooks/useTourContext';
 
 const navItems = [
   { name: 'Inicio', href: '/' },
@@ -17,6 +18,11 @@ interface HeaderProps {
 
 export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}) {
   const pathname = usePathname();
+  const tourContext = useTourContext();
+  
+  // Usar props si se proporcionan, sino usar context
+  const finalOnStartTour = onStartTour || tourContext.onStartTour;
+  const finalShowTourButton = showTourButton || tourContext.showTourButton;
 
   return (
     <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10 tour-welcome">
@@ -61,9 +67,9 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
         </nav>
           
         <div className="flex items-center gap-2">
-          {showTourButton && (
+          {finalShowTourButton && (
             <button 
-              onClick={onStartTour}
+              onClick={finalOnStartTour}
               className="p-1 hover:bg-muted rounded-full transition-colors"
               title="Iniciar tour guiado"
             >

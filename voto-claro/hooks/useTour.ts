@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Step, CallBackProps } from 'react-joyride';
 
 const TOUR_STORAGE_KEY = 'voto-claro-tour-completed';
@@ -59,13 +59,13 @@ export function useTour() {
     }
   };
 
-  const startTour = () => {
+  const startTour = useCallback(() => {
     if (!isClient) return;
     setTourStep(0);
     setRunTour(true);
-  };
+  }, [isClient]);
 
-  const resetTour = () => {
+  const resetTour = useCallback(() => {
     if (!isClient) return;
     try {
       localStorage.removeItem(TOUR_STORAGE_KEY);
@@ -73,7 +73,7 @@ export function useTour() {
     } catch (error) {
       console.warn('Error resetting tour:', error);
     }
-  };
+  }, [isClient, startTour]);
 
   return {
     runTour: isClient && runTour,

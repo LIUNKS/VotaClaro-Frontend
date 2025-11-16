@@ -4,7 +4,8 @@ import { NewsCard } from '@/components/home';
 import { NewsError } from '@/components/ui/NewsError';
 import { NewsSkeleton } from '@/components/ui/NewsSkeleton';
 import { useNews } from '@/hooks';
-import { ArrowRight, Link } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function NewsList(){
   const { news, loading, error, refetch } =  useNews(4);

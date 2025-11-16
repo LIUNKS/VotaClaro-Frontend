@@ -1,24 +1,24 @@
-"use client";
+'use client';
+//pagina funcional que maneja todo el home page + tour pero es necesario cambiar
 
-import { Bell, Calendar, ArrowRight, HelpCircle } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { NewsCard, VotingLocation, CandidatesGrid } from "@/components/home";
-import { BottomNavigation } from "@/components/BottomNavigation";
-import { Footer } from "@/components/ui/Footer";
-import { Header } from "@/components/layouts";
-import { ModeToggle } from '@/components/toogle-dark-mode';
-import { NewsSkeleton } from "@/components/ui/NewsSkeleton";
-import { NewsError } from "@/components/ui/NewsError";
-import { useNews, useTour } from "@/hooks";
-import { useState } from "react";
-import Link from "next/link";
+import { Bell, Calendar, ArrowRight, HelpCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { NewsCard, VotingLocation, CandidatesGrid } from '@/components/home';
+import { BottomNavigation } from '@/components/BottomNavigation';
+import { Footer } from '@/components/ui/Footer';
+import { Header } from '@/components/layouts';
+import { NewsSkeleton } from '@/components/ui/NewsSkeleton';
+import { NewsError } from '@/components/ui/NewsError';
+import { useNews, useTour } from '@/hooks';
+import { useState } from 'react';
+import Link from 'next/link';
 import Joyride from 'react-joyride';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<"home" | "candidates" | "members" | "profile">("home");
+  const [activeTab, setActiveTab] = useState<'home' | 'candidates' | 'members' | 'profile'>('home');
   const { news, loading, error, refetch, lastUpdated } = useNews(4);
   const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
   
@@ -618,14 +618,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-
-      {/* Footer - Desktop Only */}
-      <Footer />
-
-      {/* Bottom Navigation - Mobile Only */}
-      <div className="lg:hidden">
-        <BottomNavigation />
-      </div>
     </div>
   );
 }
