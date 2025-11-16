@@ -8,7 +8,7 @@ import { NewsError } from '@/components/ui/NewsError';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { useNews, useSearch, useScrollRestore } from '@/hooks';
 import { useRouter } from 'next/navigation';
-import type { NewsCardData } from '@/app/services/newsService';
+import type { NewsCardData } from '@/services/newsService';
 
 export default function NoticiasPage() {
 	const { saveScrollPosition } = useScrollRestore({ key: 'noticias-page' });
