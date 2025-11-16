@@ -10,6 +10,19 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
+function NetworkErrorModal({ open, onClose }: { open: boolean, onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center mx-4">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Sin conexión a internet</h2>
+        <p className="mb-6 text-muted-foreground">Para visualizar este contenido debes conectarte a internet.</p>
+        <Button onClick={onClose} className="w-full">Cerrar</Button>
+      </div>
+    </div>
+  );
+}
+
 export default function NoticiaDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -23,6 +36,7 @@ export default function NoticiaDetailPage() {
   const [currentNews, setCurrentNews] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [networkError, setNetworkError] = useState(false);
 
   const newsId = params.id ? parseInt(params.id as string, 10) : null;
   
@@ -37,8 +51,18 @@ export default function NoticiaDetailPage() {
       try {
         setLoading(true);
         setError(null);
+        setNetworkError(false);
         
-        const response = await fetch('/api/news/political');
+        // Crear AbortController para timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
+        
+        const response = await fetch('/api/news/political', {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
         if (!response.ok) {
           throw new Error('Error al cargar noticias');
         }
@@ -46,18 +70,25 @@ export default function NoticiaDetailPage() {
         const data = await response.json();
         
         if (data.success && data.data && Array.isArray(data.data)) {
-          const foundNews = data.data[newsId];
+          const foundNews = data.data[newsId!];
           
           if (foundNews) {
             setCurrentNews(foundNews);
           } else {
             setError('Noticia no encontrada');
           }
+        } else if (data.offline) {
+          setNetworkError(true);
         } else {
           setError('Formato de datos inválido');
         }
-      } catch (err) {
-        setError('Error al cargar la noticia');
+      } catch (err: any) {
+        // Detectar error de red (offline) o timeout
+        if (err.name === 'AbortError' || err instanceof TypeError || err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('ERR_INTERNET_DISCONNECTED')) {
+          setNetworkError(true);
+        } else {
+          setError('Error al cargar la noticia');
+        }
         console.error('Error fetching news detail:', err);
       } finally {
         setLoading(false);
@@ -132,6 +163,21 @@ export default function NoticiaDetailPage() {
           </div>
         </div>
       </main>
+    );
+  }
+
+  if (networkError) {
+    return (
+      <>
+        <NetworkErrorModal open={networkError} onClose={() => setNetworkError(false)} />
+        <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
+          <div className="text-center py-16">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Sin conexión</h2>
+            <p className="text-muted-foreground mb-6">Para visualizar este contenido debes conectarte a internet.</p>
+            <Button onClick={handleBackClick}>Volver a noticias</Button>
+          </div>
+        </main>
+      </>
     );
   }
 
