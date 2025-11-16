@@ -9,38 +9,38 @@ interface UseSearchProps<T> {
   onSearchChange?: () => void;
 }
 
-export function useSearch<T>({ 
-  data, 
-  searchFields, 
-  initialValue = '',
-  onSearchChange
+export function useSearch<T>({
+	data,
+	searchFields,
+	initialValue = '',
+	onSearchChange
 }: UseSearchProps<T>) {
-  const [searchTerm, setSearchTerm] = useState(initialValue);
+	const [searchTerm, setSearchTerm] = useState(initialValue);
 
-  const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return data;
+	const filteredData = useMemo(() => {
+		if (!searchTerm.trim()) return data;
     
-    return data.filter(item =>
-      searchFields.some(field => {
-        const value = item[field];
-        if (typeof value === 'string') {
-          return value.toLowerCase().includes(searchTerm.toLowerCase());
-        }
-        return false;
-      })
-    );
-  }, [data, searchFields, searchTerm]);
+		return data.filter(item =>
+			searchFields.some(field => {
+				const value = item[field];
+				if (typeof value === 'string') {
+					return value.toLowerCase().includes(searchTerm.toLowerCase());
+				}
+				return false;
+			})
+		);
+	}, [data, searchFields, searchTerm]);
 
-  useEffect(() => {
-    if (onSearchChange) {
-      onSearchChange();
-    }
-  }, [searchTerm, onSearchChange]);
+	useEffect(() => {
+		if (onSearchChange) {
+			onSearchChange();
+		}
+	}, [searchTerm, onSearchChange]);
 
-  return {
-    searchTerm,
-    setSearchTerm,
-    filteredData,
-    resultsCount: filteredData.length
-  };
+	return {
+		searchTerm,
+		setSearchTerm,
+		filteredData,
+		resultsCount: filteredData.length
+	};
 }

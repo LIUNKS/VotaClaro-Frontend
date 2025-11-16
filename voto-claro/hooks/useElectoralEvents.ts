@@ -15,22 +15,22 @@ export interface ElectoralEvent {
 }
 
 export function useElectoralEvents() {
-  const [events, setEvents] = useState<ElectoralEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+	const [events, setEvents] = useState<ElectoralEvent[]>([]);
+	const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadEvents = () => {
-      try {
-        setEvents(electoralData.electoralEvents);
-      } catch (error) {
-        console.error('Error loading electoral events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+	useEffect(() => {
+		const loadEvents = () => {
+			try {
+				setEvents(electoralData.electoralEvents);
+			} catch (error) {
+				console.error('Error loading electoral events:', error);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-    loadEvents();
-  }, []);
+		loadEvents();
+	}, []);
 
-  return { events, loading };
+	return { events, loading };
 }

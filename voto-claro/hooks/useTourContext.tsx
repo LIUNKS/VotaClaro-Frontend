@@ -12,30 +12,30 @@ interface TourContextValue extends TourConfig {
 }
 
 const defaultConfig: TourContextValue = {
-  showTourButton: false,
-  setTourConfig: () => undefined,
+	showTourButton: false,
+	setTourConfig: () => undefined,
 };
 
 const TourContext = createContext<TourContextValue>(defaultConfig);
 
 export function TourProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<TourConfig>({ showTourButton: false });
+	const [config, setConfig] = useState<TourConfig>({ showTourButton: false });
 
-  const value = useMemo(() => ({
-    onStartTour: config.onStartTour,
-    showTourButton: Boolean(config.showTourButton),
-    setTourConfig: setConfig,
-  }), [config]);
+	const value = useMemo(() => ({
+		onStartTour: config.onStartTour,
+		showTourButton: Boolean(config.showTourButton),
+		setTourConfig: setConfig,
+	}), [config]);
 
-  return (
-    <TourContext.Provider value={value}>
-      {children}
-    </TourContext.Provider>
-  );
+	return (
+		<TourContext.Provider value={value}>
+			{children}
+		</TourContext.Provider>
+	);
 }
 
 export function useTourContext() {
-  return useContext(TourContext);
+	return useContext(TourContext);
 }
 
 export type { TourConfig, TourContextValue };
