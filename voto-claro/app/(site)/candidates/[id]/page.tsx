@@ -168,10 +168,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 							<Badge variant="secondary" className="mb-2">
                 Candidato Presidencial
 							</Badge>
-              
-							<div className="text-sm text-muted-foreground">
-                DNI: {candidate.dni}
-							</div>
 						</div>
 					</CardContent>
 				</Card>
