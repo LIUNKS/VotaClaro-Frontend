@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     url: 'https://web.francopm.dev/',
     images: [
       {
-        url: 'https://ibb.co/MWNcXh3',
+        url: 'https://web.francopm.dev/images/page.jpg',
         width: 1200,
         height: 630,
         alt: 'Vota informado | VotaClaro',
