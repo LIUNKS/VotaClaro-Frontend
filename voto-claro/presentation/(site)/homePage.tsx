@@ -500,52 +500,52 @@ export default function HomePage() {
 						</section>
 					</div>
 
-          {/* Right Column - Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
-            {/* Mi Local de Votación */}
-            <section className={`tour-voting-location transition-opacity duration-500 ${
-              shouldApplyOpacity('.tour-voting-location') ? 'opacity-30' : 'opacity-100'
-            }`}>
-              <VotingLocation />
-            </section>
+					{/* Right Column - Sidebar */}
+					<div className="lg:col-span-4 space-y-6">
+						{/* Mi Local de Votación */}
+						<section className={`tour-voting-location transition-opacity duration-500 ${
+							shouldApplyOpacity('.tour-voting-location') ? 'opacity-30' : 'opacity-100'
+						}`}>
+							<VotingLocation />
+						</section>
 
-            {/* Calendario Electoral */}
-            <section className={`tour-calendar transition-opacity duration-500 ${
-              shouldApplyOpacity('.tour-calendar') ? 'opacity-30' : 'opacity-100'
-            }`}>
-              <Link href="/calendario" className="block group">
-              <Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
-                <CardContent className="p-4 lg:p-4">
-                  <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
-                    <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
-                  </div>
+						{/* Calendario Electoral */}
+						<section className={`tour-calendar transition-opacity duration-500 ${
+							shouldApplyOpacity('.tour-calendar') ? 'opacity-30' : 'opacity-100'
+						}`}>
+							<Link href="/calendario" className="block group">
+								<Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
+									<CardContent className="p-4 lg:p-4">
+										<div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
+											<Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
+										</div>
                   
-                  <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
-                  <p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
-                </CardContent>
-              </Card>
-              </Link>
-            </section>
+										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
+										<p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
+									</CardContent>
+								</Card>
+							</Link>
+						</section>
 
-            {/* Soy Miembro de Mesa */}
-            <section className={`tour-member transition-opacity duration-500 ${
-              shouldApplyOpacity('.tour-member') ? 'opacity-30' : 'opacity-100'
-            }`}>
-              <Link href="/miembro-mesa" className="block group">
-                <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
-                  <CardContent className="p-4 lg:p-4">
-                    <div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">Soy Miembro de Mesa</h3>
-                    <p className="text-sm lg:text-base text-muted-foreground mb-0">Capacitación y materiales</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </section>
-          </div>
-        </div>
-      </main>
-    </>
-  );
+						{/* Soy Miembro de Mesa */}
+						<section className={`tour-member transition-opacity duration-500 ${
+							shouldApplyOpacity('.tour-member') ? 'opacity-30' : 'opacity-100'
+						}`}>
+							<Link href="/miembro-mesa" className="block group">
+								<Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+									<CardContent className="p-4 lg:p-4">
+										<div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
+											<BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
+										</div>
+										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">Soy Miembro de Mesa</h3>
+										<p className="text-sm lg:text-base text-muted-foreground mb-0">Capacitación y materiales</p>
+									</CardContent>
+								</Card>
+							</Link>
+						</section>
+					</div>
+				</div>
+			</main>
+		</>
+	);
 }
