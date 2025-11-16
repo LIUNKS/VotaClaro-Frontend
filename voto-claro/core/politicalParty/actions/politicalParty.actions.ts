@@ -7,21 +7,25 @@ export const politicalPartyActions = {
 	async createPoliticalParty(payload: CreatePoliticalPartyPayload): Promise<PoliticalParty> {
 		const formData = new FormData();
 		
-		// Agregar datos JSON como string
-		formData.append('politicalPartyRequest', JSON.stringify(payload.politicalPartyRequest));
+		// Crear el JSON como Blob con tipo application/json
+		const jsonBlob = new Blob(
+			[JSON.stringify(payload.politicalPartyRequest)],
+			{ type: 'application/json' }
+		);
+		formData.append('politicalPartyRequest', jsonBlob, 'politicalPartyRequest.json');
 		
-		// Agregar archivos
-		formData.append('urlLogo', payload.urlLogo);
-		formData.append('urlListMembers', payload.urlListMembers);
+		// Agregar archivos solo si existen
+		if (payload.urlLogo) {
+			formData.append('urlLogo', payload.urlLogo);
+		}
+		if (payload.urlListMembers) {
+			formData.append('urlListMembers', payload.urlListMembers);
+		}
 
+		// Usar axios sin especificar headers para que detecte correctamente el FormData
 		const response = await axios.post<PoliticalParty>(
 			`${API_URL}/politicalParty/add`,
-			formData,
-			{
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-			}
+			formData
 		);
 
 		return response.data;

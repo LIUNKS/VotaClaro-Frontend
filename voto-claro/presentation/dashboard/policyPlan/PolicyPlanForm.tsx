@@ -32,7 +32,7 @@ export function PolicyPlanForm() {
 				policyPlanRequest: {
 					political_party_id: values.political_party_id,
 				},
-				urlPdf: values.urlPdf as File,
+				urlPdf: values.urlPdf,
 			};
 
 			await createPlan(payload);

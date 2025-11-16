@@ -12,7 +12,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import GeolocationMap from '@/components/maps/GeolocationMap';
 import { VotingLocationModal } from '@/components/ui/modal';
 import Link from 'next/link';
-import { getVotingLocationByDni, getDefaultVotingLocation, VotingLocationData } from '@/lib/mockData';
+import { getVotingLocationByDni, getDefaultVotingLocation, VotingLocationData, getGeneralFacilities } from '@/lib/mockData';
+import { useLocationVote } from '@/core/modules/locationVote/hooks/useLocationVote';
 
 // Datos de ejemplo para el local de votación
 const votingLocationData = {
@@ -39,17 +40,40 @@ export default function VotingLocationPage() {
 	);
 	const [userDni, setUserDni] = useState<string>('');
 
-	const handleDniSubmit = (dni: string) => {
-		const locationData = getVotingLocationByDni(dni);
-		if (locationData) {
-			setVotingLocationData(locationData);
-			setUserDni(dni);
-		} else {
-			// Si no se encuentra el DNI, mostrar datos por defecto con mensaje
+	const { getCitizenByDni, loading, error } = useLocationVote();
+
+	const handleDniSubmit = async (dni: string): Promise<void> => {
+		try {
+			const citizen = await getCitizenByDni(dni);
+			if (citizen) {
+				const locationData: VotingLocationData = {
+					dni: citizen.dni,
+					schoolName: citizen.local_votacion.schoolName,
+					address: citizen.local_votacion.address,
+					tableNumber: citizen.local_votacion.tableNumber,
+					latitude: citizen.local_votacion.latitude,
+					longitude: citizen.local_votacion.longitude,
+					hours: citizen.local_votacion.hours,
+					capacity: citizen.local_votacion.capacity,
+					facilities: getGeneralFacilities(),
+				};
+				setVotingLocationData(locationData);
+				setUserDni(dni);
+			} else {
+				// Si no se encuentra el DNI, mostrar datos por defecto con mensaje
+				setVotingLocationData({
+					...getDefaultVotingLocation(),
+					schoolName: 'DNI no encontrado',
+					address: 'Lo sentimos, no encontramos información para el DNI ingresado. Por favor verifica el número o contacta al centro de atención.',
+				});
+				setUserDni(dni);
+			}
+		} catch (err) {
+			// En caso de error, mostrar mensaje de error
 			setVotingLocationData({
 				...getDefaultVotingLocation(),
-				schoolName: 'DNI no encontrado',
-				address: 'Lo sentimos, no encontramos información para el DNI ingresado. Por favor verifica el número o contacta al centro de atención.',
+				schoolName: 'Error al buscar',
+				address: 'Ocurrió un error al buscar la información. Por favor intenta de nuevo.',
 			});
 			setUserDni(dni);
 		}
@@ -71,6 +95,7 @@ export default function VotingLocationPage() {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				onDniSubmit={handleDniSubmit}
+				isLoading={loading}
 			/>
 
 			{/* Header */}

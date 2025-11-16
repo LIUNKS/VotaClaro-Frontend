@@ -9,23 +9,18 @@ import { useState, useEffect } from 'react';
 interface VotingLocationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDniSubmit: (dni: string) => void;
+  onDniSubmit: (dni: string) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function VotingLocationModal({ isOpen, onClose, onDniSubmit }: VotingLocationModalProps) {
+export function VotingLocationModal({ isOpen, onClose, onDniSubmit, isLoading = false }: VotingLocationModalProps) {
 	const [dni, setDni] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (dni.trim() && dni.length === 8) {
-			setIsLoading(true);
-			// Simular una pequeña demora para mostrar el loading
-			setTimeout(() => {
-				onDniSubmit(dni);
-				setIsLoading(false);
-				onClose();
-			}, 1000);
+			await onDniSubmit(dni);
+			onClose();
 		}
 	};
 
@@ -64,7 +59,6 @@ export function VotingLocationModal({ isOpen, onClose, onDniSubmit }: VotingLoca
 			{/* Modal Content */}
 			<Card className="relative w-full max-w-md mx-auto shadow-lg animate-in fade-in-0 zoom-in-95 duration-200">
 				<CardContent className="p-6">
-					{/* Botón de cerrar */}
 					<button
 						onClick={onClose}
 						className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors"

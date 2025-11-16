@@ -113,6 +113,14 @@ const GeolocationMap: React.FC<GeolocationMapProps> = ({
 	}, []);
 
 	useEffect(() => {
+		if (map.current && marker.current && latitude && longitude && !isNaN(latitude) && !isNaN(longitude)) {
+			map.current.setCenter([longitude, latitude]);
+			marker.current.setLngLat([longitude, latitude]);
+			marker.current.setPopup(new mapboxgl.Popup().setHTML(`<h3>${markerTitle}</h3>`));
+		}
+	}, [latitude, longitude, markerTitle]);
+
+	useEffect(() => {
 		return () => {
 			if (marker.current) {
 				marker.current.remove();

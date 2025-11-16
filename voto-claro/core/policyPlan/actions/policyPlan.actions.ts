@@ -7,20 +7,22 @@ export const policyPlanActions = {
 	async createPolicyPlan(payload: CreatePolicyPlanPayload): Promise<PolicyPlan> {
 		const formData = new FormData();
 		
-		// Agregar datos JSON como string
-		formData.append('policyPlanRequest', JSON.stringify(payload.policyPlanRequest));
+		// Crear el JSON como Blob con tipo application/json
+		const jsonBlob = new Blob(
+			[JSON.stringify(payload.policyPlanRequest)],
+			{ type: 'application/json' }
+		);
+		formData.append('policyPlanRequest', jsonBlob, 'policyPlanRequest.json');
 		
-		// Agregar archivo PDF
-		formData.append('urlPdf', payload.urlPdf);
+		// Agregar archivo PDF solo si existe
+		if (payload.urlPdf) {
+			formData.append('urlPdf', payload.urlPdf);
+		}
 
+		// Usar axios sin especificar headers para que detecte correctamente el FormData
 		const response = await axios.post<PolicyPlan>(
 			`${API_URL}/policyPlan/add`,
-			formData,
-			{
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-			}
+			formData
 		);
 
 		return response.data;

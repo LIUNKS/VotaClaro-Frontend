@@ -4,7 +4,7 @@ export interface PolicyPlanRequest {
 
 export interface CreatePolicyPlanPayload {
 	policyPlanRequest: PolicyPlanRequest;
-	urlPdf: File;
+	urlPdf?: File;
 }
 
 export interface PolicyPlan {
