@@ -26,7 +26,7 @@ export default function LogoAnimation() {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="flex justify-center items-center pointer-events-none">
+    <div ref={containerRef} className="flex items-center pointer-events-none">
       <LogoSvg className="w-1/2 stroke-foreground stroke-[1.2px] fill-foreground" />
     </div>
   );
