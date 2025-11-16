@@ -18,19 +18,8 @@ interface WelcomeIntroProps {
 
 export default function WelcomeIntro({ onComplete, forceShow = false }: WelcomeIntroProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [shouldShow] = useState(() => {
-		if (typeof window === 'undefined') return false;
-		
-		// Si forceShow está activado, siempre mostrar
-		if (forceShow) return true;
-		
-		const hasVisited = localStorage.getItem('mivoto_visited');
-		if (!hasVisited) {
-			localStorage.setItem('mivoto_visited', 'true');
-			return true;
-		}
-		return false;
-	});
+	const [shouldShow, setShouldShow] = useState<boolean | null>(null);
+	const hasInitialized = useRef(false);
 
 	// Generar posiciones aleatorias para partículas de forma estable
 	const [particlePositions] = useState(() =>
@@ -40,9 +29,35 @@ export default function WelcomeIntro({ onComplete, forceShow = false }: WelcomeI
 		}))
 	);
 	
+	// Revisar localStorage solo una vez después de montar
 	useEffect(() => {
-		// Si no debe mostrar, llamar onComplete inmediatamente
-		if (!shouldShow) {
+		if (hasInitialized.current) return;
+		hasInitialized.current = true;
+
+		// Ejecutar lógica de forma asíncrona para evitar warnings
+		Promise.resolve().then(() => {
+			// Si forceShow está activado, siempre mostrar
+			if (forceShow) {
+				setShouldShow(true);
+				return;
+			}
+			
+			// Revisar si ya visitó
+			const hasVisited = localStorage.getItem('mivoto_visited');
+			if (!hasVisited) {
+				// Primera vez, marcar como visitado y mostrar
+				localStorage.setItem('mivoto_visited', 'true');
+				setShouldShow(true);
+			} else {
+				// Ya visitó, no mostrar
+				setShouldShow(false);
+			}
+		});
+	}, [forceShow]);
+	
+	useEffect(() => {
+		// Llamar onComplete si no debe mostrar y ya está decidido
+		if (shouldShow === false) {
 			onComplete();
 		}
 	}, [shouldShow, onComplete]);
@@ -162,7 +177,7 @@ export default function WelcomeIntro({ onComplete, forceShow = false }: WelcomeI
 			className="fixed inset-0 z-50 bg-background flex items-center justify-center overflow-hidden"
 		>
 			{/* Llama - Esquina inferior derecha */}
-			<div className="absolute bottom-0 right-0 w-64 h-64 lg:w-96 lg:h-96 opacity-20">
+			<div className="absolute bottom-0 right-0 w-1/2 lg:w-96 lg:h-96 opacity-20">
 				<LlamaSvg
 					id="llama-intro"
 					className="w-full h-full stroke-foreground stroke-[1px]"
