@@ -4,44 +4,39 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { SWRegister } from '../components/SWRegister';
 
 export const metadata: Metadata = {
-  title: 'Vota informado | MiVoto',
-  description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
-  keywords: ['elecciones', 'votación', 'candidatos', 'información electoral', 'democracia', 'voto informado', 'procesos electorales'],
-  authors: [{ name: 'MiVoto Team', url: 'https://web.francopm.dev/' }],
-  openGraph: {
-    title: 'Vota informado | MiVoto',
-    description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
-    url: 'https://web.francopm.dev/',
-    images: [
-      {
-        url: 'https://web.francopm.dev/images/page.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Vota informado | MiVoto',
-      },
-    ],
-    locale: 'es_ES',
-    type: 'website',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+	title: 'Vota informado | MiVoto',
+	description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
+	keywords: ['elecciones', 'votación', 'candidatos', 'información electoral', 'democracia', 'voto informado', 'procesos electorales'],
+	authors: [{ name: 'MiVoto Team', url: 'https://web.francopm.dev/' }],
+	openGraph: {
+		title: 'Vota informado | MiVoto',
+		description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
+		url: 'https://web.francopm.dev/',
+		images: [
+			{
+				url: 'https://web.francopm.dev/images/page.jpg',
+				width: 1200,
+				height: 630,
+				alt: 'Vota informado | MiVoto',
+			},
+		],
+		locale: 'es_ES',
+		type: 'website',
+	},
+	robots: {
+		index: true,
+		follow: true,
+	},
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0d47a1" />
-      </head>
       <body className="antialiased">
-        <SWRegister />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -49,9 +44,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
 
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+					{children}
+				</ThemeProvider>
+			</body>
+		</html>
+	);
 }
