@@ -1,3 +1,4 @@
+import ColibriAnimation from '@/components/animations/colibri-draw';
 import LlamaAnimation from '@/components/animations/llama-draw';
 import { BottomNavigation } from '@/components/BottomNavigation';
 import { Header } from '@/components/layouts';
@@ -15,6 +16,7 @@ export default function PageLayout({
     <TourProvider>
       <div className="min-h-screen bg-background">
         <LlamaAnimation />
+        <ColibriAnimation />
         <div className="relative z-10">
           <Header />
           <ScrollRestorer />

@@ -37,7 +37,7 @@ export default function VotingLocationPage() {
   const [votingLocationData, setVotingLocationData] = useState<VotingLocationData>(
     getDefaultVotingLocation()
   );
-  const [userDni, setUserDni] = useState<string>("");
+  const [userDni, setUserDni] = useState<string>('');
 
   const handleDniSubmit = (dni: string) => {
     const locationData = getVotingLocationByDni(dni);
@@ -48,8 +48,8 @@ export default function VotingLocationPage() {
       // Si no se encuentra el DNI, mostrar datos por defecto con mensaje
       setVotingLocationData({
         ...getDefaultVotingLocation(),
-        schoolName: "DNI no encontrado",
-        address: "Lo sentimos, no encontramos información para el DNI ingresado. Por favor verifica el número o contacta al centro de atención.",
+        schoolName: 'DNI no encontrado',
+        address: 'Lo sentimos, no encontramos información para el DNI ingresado. Por favor verifica el número o contacta al centro de atención.',
       });
       setUserDni(dni);
     }
@@ -65,7 +65,7 @@ export default function VotingLocationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       {/* Modal de búsqueda por DNI */}
       <VotingLocationModal
         isOpen={isModalOpen}
@@ -91,8 +91,8 @@ export default function VotingLocationPage() {
               </div>
               <p className="text-sm lg:text-base text-muted-foreground">
                 {userDni 
-                  ? "Información de tu local de votación" 
-                  : "Encuentra tu lugar de votación y obtén direcciones"
+                  ? 'Información de tu local de votación' 
+                  : 'Encuentra tu lugar de votación y obtén direcciones'
                 }
               </p>
             </div>
@@ -111,7 +111,7 @@ export default function VotingLocationPage() {
       {/* Main Content */}
       <main className="max-w-md lg:max-w-7xl mx-auto px-4 lg:px-8 py-6">
         {/* Mensaje cuando no hay DNI o DNI no encontrado */}
-        {(!userDni || votingLocationData.schoolName === "DNI no encontrado") && (
+        {(!userDni || votingLocationData.schoolName === 'DNI no encontrado') && (
           <div className="mb-6">
             <Card className="border-2 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/20">
               <CardContent className="p-4 lg:p-6">
@@ -121,12 +121,12 @@ export default function VotingLocationPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-2">
-                      {!userDni ? "¡Ingresa tu DNI para comenzar!" : "DNI no encontrado"}
+                      {!userDni ? '¡Ingresa tu DNI para comenzar!' : 'DNI no encontrado'}
                     </h3>
                     <p className="text-orange-800 dark:text-orange-200 text-sm">
                       {!userDni 
                         ? "Haz clic en 'Cambiar DNI' o recarga la página para buscar tu local de votación específico."
-                        : "No encontramos información para el DNI ingresado. Verifica el número o contacta al centro de atención."
+                        : 'No encontramos información para el DNI ingresado. Verifica el número o contacta al centro de atención.'
                       }
                     </p>
                   </div>
@@ -134,7 +134,7 @@ export default function VotingLocationPage() {
                     onClick={() => setIsModalOpen(true)}
                     className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-sm font-medium"
                   >
-                    {!userDni ? "Buscar por DNI" : "Intentar de nuevo"}
+                    {!userDni ? 'Buscar por DNI' : 'Intentar de nuevo'}
                   </button>
                 </div>
               </CardContent>
@@ -194,7 +194,7 @@ export default function VotingLocationPage() {
                     <p className="text-muted-foreground mb-2">
                       {votingLocationData.address}
                     </p>
-                    {votingLocationData.dni !== "00000000" && (
+                    {votingLocationData.dni !== '00000000' && (
                       <p className="text-sm font-medium text-primary">
                         Mesa: {votingLocationData.tableNumber}
                       </p>
@@ -205,7 +205,7 @@ export default function VotingLocationPage() {
                 {/* Contact Info */}
                 <div className="space-y-3 border-t border-border pt-4">
                   <div className="flex items-center gap-3">
-                    {votingLocationData.hours !== "" && (
+                    {votingLocationData.hours !== '' && (
                       <>
                         <Clock className="w-5 h-5 text-muted-foreground" />
                         <span className="text-card-foreground">
@@ -283,6 +283,6 @@ export default function VotingLocationPage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }
