@@ -481,6 +481,8 @@ export default function HomePage() {
 							<div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
               En vivo desde El Comercio
 						</div>
+
+                        
 					)}
 					{error && !loading && (
 						<div className="flex items-center gap-2 text-sm text-orange-600">
@@ -489,7 +491,6 @@ export default function HomePage() {
 						</div>
 					)}
 				</div>
-        
 				<div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:space-y-0 space-y-6">
 					{/* Left Column - Noticias */}
 					<div className="lg:col-span-8">
@@ -543,6 +544,30 @@ export default function HomePage() {
 								</Card>
 							</Link>
 						</section>
+					</div>
+				</div>
+
+				{/* Candidatos y Partidos - Responsive two-up (abajo de noticias) */}
+				<div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mt-6">
+					<div className="w-full lg:w-1/2">
+						<ItemsGrid
+							title="Candidatos Destacados"
+							items={candidatos}
+							type="candidates"
+							viewAllText="Ver todos los candidatos"
+							viewAllPath="/candidates"
+							icon={Users}
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<ItemsGrid
+							title="Partidos"
+							items={partidos}
+							type="partidos"
+							viewAllText="Ver todos los partidos"
+							viewAllPath="/partidos"
+							icon={Flag}
+						/>
 					</div>
 				</div>
 			</main>
