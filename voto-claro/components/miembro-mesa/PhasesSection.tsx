@@ -103,8 +103,8 @@ export function PhasesSection() {
 			<div className="text-center space-y-2">
 				<h2 className="text-2xl font-bold text-foreground">Las 3 Fases de la Jornada Electoral</h2>
 				<p className="text-muted-foreground max-w-4xl mx-auto">
-          Tu trabajo se divide en tres momentos cruciales, conocidos como "Los 3 Momentos de la Jornada".
-          Cada fase tiene objetivos específicos y pasos claramente definidos.
+					Tu trabajo se divide en tres momentos cruciales, conocidos como &quot;Los 3 Momentos de la Jornada&quot;.
+					Cada fase tiene objetivos específicos y pasos claramente definidos.
 				</p>
 			</div>
       
