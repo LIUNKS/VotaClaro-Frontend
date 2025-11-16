@@ -10,11 +10,13 @@ import { VotingLocation, CandidatesGrid } from '@/components/home';
 import NewsList from './newsList';
 import { useTour } from '@/hooks/useTour';
 import { useTourContext } from '@/hooks/useTourContext';
+import { useNews } from '@/hooks';
 
 export default function HomePage() {
   const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
   const { setTourConfig } = useTourContext();
   const [currentTourTarget, setCurrentTourTarget] = useState<string | null>(null);
+  const { news, loading, error } = useNews(4);
 
   useEffect(() => {
     setTourConfig({ onStartTour: startTour, showTourButton: true });
@@ -417,6 +419,25 @@ export default function HomePage() {
       )}
 
       <main className="max-w-md lg:max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 pb-20 lg:pb-6">
+        {/* Header Section - Above columns */}
+        <div className="flex items-center justify-between mb-4 lg:mb-6">
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+            Noticias Recientes
+          </h1>
+          {news.length > 0 && !loading && (
+            <div className="flex items-center gap-2 text-sm text-green-600">
+              <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+              En vivo desde El Comercio
+            </div>
+          )}
+          {error && !loading && (
+            <div className="flex items-center gap-2 text-sm text-orange-600">
+              <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+              Modo offline
+            </div>
+          )}
+        </div>
+        
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:space-y-0 space-y-6">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-8 space-y-6">
