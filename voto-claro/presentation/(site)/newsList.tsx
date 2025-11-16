@@ -73,15 +73,16 @@ export default function NewsList(){
             ))}
           </div>
           {news.length > 0 && (
-            <div className="text-center mt-6 space-y-3">
-              <button 
+            <div className="mt-6 space-y-3">
+              <button
                 onClick={handleViewAllClick}
-                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors group"
+                className="flex w-full items-center justify-center gap-2 px-6 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors group"
               >
                 Ver todas las noticias
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
+
           )}
         </>
       )}

@@ -3,21 +3,38 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Joyride from 'react-joyride';
-import { Calendar, Zap, BookOpen, AlertCircle, CheckCircle2, Menu, Navigation } from 'lucide-react';
+import { Calendar, Zap, BookOpen, AlertCircle, CheckCircle2, Menu, Navigation, Users, Flag } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { VotingLocation, CandidatesGrid } from '@/components/home';
+import { VotingLocation, ItemsGrid } from '@/components/home';
 import NewsList from './newsList';
 import { useTour } from '@/hooks/useTour';
 import { useTourContext } from '@/hooks/useTourContext';
 import { useNews } from '@/hooks';
+import { getFeaturedCandidates } from '@/lib/candidates-data';
 
 export default function HomePage() {
   const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
   const { setTourConfig } = useTourContext();
   const [currentTourTarget, setCurrentTourTarget] = useState<string | null>(null);
   const { news, loading, error } = useNews(4);
+  const [partidos, setPartidos] = useState([]);
+
+  // Cargar partidos desde JSON
+  useEffect(() => {
+    const loadPartidos = async () => {
+      try {
+        const response = await fetch('/partidos.json');
+        const data = await response.json();
+        // Tomar solo los primeros 3 partidos
+        setPartidos(data.partidos.slice(0, 3));
+      } catch (error) {
+        console.error('Error loading partidos:', error);
+      }
+    };
+    loadPartidos();
+  }, []);
 
   useEffect(() => {
     setTourConfig({ onStartTour: startTour, showTourButton: true });
@@ -267,6 +284,37 @@ export default function HomePage() {
       placement: 'right' as const,
     },
     {
+      target: '.tour-parties',
+      content: (
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-semibold">Partidos Políticos</h3>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-muted-foreground leading-relaxed">
+              Conoce las organizaciones políticas que participan en las elecciones. 
+              Explora sus ideologías, propuestas y candidatos postulados.
+            </p>
+            <Card className="bg-blue-50/80 dark:bg-slate-800/80 border-blue-200/60 dark:border-blue-400/50 backdrop-blur-md">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-3">
+                  <div className="shrink-0">
+                    <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-blue-700 dark:text-blue-200 leading-relaxed">Información completa sobre partidos y movimientos políticos</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
+      ),
+      placement: 'left' as const,
+    },
+    {
       target: '.tour-voting-location',
       content: (
         <Card>
@@ -393,6 +441,9 @@ export default function HomePage() {
     },
   ];
 
+  // Obtener candidatos destacados
+  const candidatos = getFeaturedCandidates(3);
+
   return (
     <>
       {isClient && (
@@ -440,20 +491,12 @@ export default function HomePage() {
         </div>
         
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:space-y-0 space-y-6">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Noticias Recientes */}
+          {/* Left Column - Noticias */}
+          <div className="lg:col-span-8">
             <section className={`tour-news transition-opacity duration-500 ${
               shouldApplyOpacity('.tour-news') ? 'opacity-30' : 'opacity-100'
             }`}>
               <NewsList />
-            </section>
-
-            {/* Conoce a tus Candidatos */}
-            <section className={`tour-candidates transition-opacity duration-500 ${
-              shouldApplyOpacity('.tour-candidates') ? 'opacity-30' : 'opacity-100'
-            }`}>
-              <CandidatesGrid />
             </section>
           </div>
 
@@ -471,16 +514,16 @@ export default function HomePage() {
               shouldApplyOpacity('.tour-calendar') ? 'opacity-30' : 'opacity-100'
             }`}>
               <Link href="/calendario" className="block group">
-              <Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
-                <CardContent className="p-4 lg:p-4">
-                  <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
-                    <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
-                  </div>
-                  
-                  <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
-                  <p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
-                </CardContent>
-              </Card>
+                <Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
+                  <CardContent className="p-4 lg:p-4">
+                    <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
+                      <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
+                    </div>
+                    
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
+                    <p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
+                  </CardContent>
+                </Card>
               </Link>
             </section>
 
@@ -501,6 +544,37 @@ export default function HomePage() {
               </Link>
             </section>
           </div>
+        </div>
+
+        {/* Sección de Candidatos y Partidos - Full Width fuera del grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 lg:mt-8">
+          {/* Conoce a tus Candidatos */}
+          <section className={`tour-candidates transition-opacity duration-500 ${
+            shouldApplyOpacity('.tour-candidates') ? 'opacity-30' : 'opacity-100'
+          }`}>
+            <ItemsGrid
+              title="Conoce a tus Candidatos"
+              items={candidatos}
+              type="candidates"
+              viewAllText="Ver Todos los Candidatos"
+              viewAllPath="/candidates"
+              icon={Users}
+            />
+          </section>
+
+          {/* Partidos Políticos */}
+          <section className={`tour-parties transition-opacity duration-500 ${
+            shouldApplyOpacity('.tour-parties') ? 'opacity-30' : 'opacity-100'
+          }`}>
+            <ItemsGrid
+              title="Partidos Políticos"
+              items={partidos}
+              type="partidos"
+              viewAllText="Ver Todos los Partidos"
+              viewAllPath="/partidos"
+              icon={Flag}
+            />
+          </section>
         </div>
       </main>
     </>
