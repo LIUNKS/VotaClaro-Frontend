@@ -266,6 +266,12 @@ export default function HomePage() {
               Explora los perfiles completos de los candidatos: sus propuestas, trayectoria profesional
               y planes de gobierno. Tomar una decisión informada es tu derecho.
 						</p>
+						<ul className="text-sm list-disc pl-5 text-muted-foreground">
+							<li><strong>Nombre:</strong> Identificación del candidato.</li>
+							<li><strong>Partido:</strong> Agrupación política a la que pertenece.</li>
+							<li><strong>Imagen:</strong> Foto del candidato (si está disponible).</li>
+							<li><strong>Ver todos:</strong> Usa el botón para ver la lista completa de candidatos.</li>
+						</ul>
 						<Card className="bg-purple-50/80 dark:bg-slate-800/80 border-purple-200/60 dark:border-purple-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
 								<div className="flex items-center gap-3">
@@ -297,6 +303,12 @@ export default function HomePage() {
               Conoce las organizaciones políticas que participan en las elecciones.
               Explora sus ideologías, propuestas y candidatos postulados.
 						</p>
+						<ul className="text-sm list-disc pl-5 text-muted-foreground">
+							<li><strong>Nombre:</strong> Nombre oficial del partido o movimiento.</li>
+							<li><strong>Descripción breve:</strong> Resumen de su propuesta o ideología.</li>
+							<li><strong>Logo:</strong> Identificador visual del partido.</li>
+							<li><strong>Ver todos:</strong> Usa el botón para ver la lista completa de partidos.</li>
+						</ul>
 						<Card className="bg-blue-50/80 dark:bg-slate-800/80 border-blue-200/60 dark:border-blue-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
 								<div className="flex items-center gap-3">
@@ -502,7 +514,7 @@ export default function HomePage() {
 					</div>
 
 					{/* Right Column - Sidebar */}
-					<div className="lg:col-span-4 space-y-6">
+					<div className="lg:col-span-4 space-y-9">
 						{/* Mi Local de Votación */}
 						<section className={`tour-voting-location transition-opacity duration-500 ${
 							shouldApplyOpacity('.tour-voting-location') ? 'opacity-30' : 'opacity-100'
@@ -549,7 +561,9 @@ export default function HomePage() {
 
 				{/* Candidatos y Partidos - Responsive two-up (abajo de noticias) */}
 				<div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mt-6">
-					<div className="w-full lg:w-1/2">
+					<div className={`w-full lg:w-1/2 tour-candidates transition-opacity duration-500 ${
+						shouldApplyOpacity('.tour-candidates') ? 'opacity-30' : 'opacity-100'
+					}`}>
 						<ItemsGrid
 							title="Candidatos Destacados"
 							items={candidatos}
@@ -559,7 +573,9 @@ export default function HomePage() {
 							icon={Users}
 						/>
 					</div>
-					<div className="w-full lg:w-1/2">
+					<div className={`w-full lg:w-1/2 tour-parties transition-opacity duration-500 ${
+						shouldApplyOpacity('.tour-parties') ? 'opacity-30' : 'opacity-100'
+					}`}>
 						<ItemsGrid
 							title="Partidos"
 							items={partidos}
