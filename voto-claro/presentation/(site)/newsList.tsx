@@ -39,25 +39,7 @@ export default function NewsList(){
   // Use real news if available, otherwise fallback
   const displayNews = news.length > 0 ? news : fallbackNews;
   return (
-    <section>
-      <div className="flex items-center justify-between mb-4 lg:mb-6">
-        <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-                  Noticias Recientes
-        </h1>
-        {news.length > 0 && !loading && (
-          <div className="flex items-center gap-2 text-sm text-green-600">
-            <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-                    En vivo desde El Comercio
-          </div>
-        )}
-        {error && !loading && (
-          <div className="flex items-center gap-2 text-sm text-orange-600">
-            <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
-                    Modo offline
-          </div>
-        )}
-      </div>
-              
+    <section>   
       {loading ? (
         <NewsSkeleton count={2} />
       ) : error ? (
