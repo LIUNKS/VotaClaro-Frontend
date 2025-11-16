@@ -68,7 +68,8 @@ export const candidatesActions = {
 			return {
 				success: false,
 				data: [],
-				error: error instanceof Error ? error.message : 'Error desconocido'
+				error: error instanceof Error ? error.message : 'Error desconocido',
+				lastUpdated: new Date().toISOString()
 			};
 		}
 	},
