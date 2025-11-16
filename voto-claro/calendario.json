@@ -1,0 +1,174 @@
+{
+  "electoralEvents": [
+    {
+      "id": 1,
+      "name": "Convocatoria a Elecciones Generales",
+      "date": "2025-03-26",
+      "description": "Convocatoria oficial para las Elecciones Generales 2026.",
+      "type": "announcement",
+      "category": "all",
+      "icon": "megaphone",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": 2,
+      "name": "Registro de normativa de organizaciones políticas",
+      "date": "2025-06-11",
+      "description": "Actualización del reglamento de organizaciones políticas para el proceso electoral.",
+      "type": "registration",
+      "category": "organizations",
+      "icon": "file-text",
+      "color": "#3B82F6"
+    },
+    {
+      "id": 3,
+      "name": "Remisión de padrones para elecciones primarias",
+      "date": "2025-06-30",
+      "description": "Plazo para remitir al RENIEC los padrones de afiliados para las primarias.",
+      "type": "deadline",
+      "category": "organizations",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 4,
+      "name": "Fecha límite para solicitar alianzas",
+      "date": "2025-08-02",
+      "description": "Último día para solicitar la conformación de alianzas electorales.",
+      "type": "deadline",
+      "category": "organizations",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 5,
+      "name": "Inscripción de alianzas electorales en el ROP",
+      "date": "2025-09-01",
+      "description": "Plazo máximo para la inscripción de alianzas en el Registro de Organizaciones Políticas.",
+      "type": "registration",
+      "category": "organizations",
+      "icon": "users",
+      "color": "#10B981"
+    },
+    {
+      "id": 6,
+      "name": "Cierre del padrón electoral",
+      "date": "2025-10-14",
+      "description": "Cierre del padrón electoral para las Elecciones Generales 2026.",
+      "type": "deadline",
+      "category": "voters",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 7,
+      "name": "Elecciones primarias (afiliados y no afiliados)",
+      "date": "2025-11-30",
+      "description": "Proceso de votación primaria para escoger delegados y precandidatos.",
+      "type": "voting",
+      "category": "voters",
+      "icon": "vote",
+      "color": "#059669"
+    },
+    {
+      "id": 8,
+      "name": "Elecciones primarias (delegados)",
+      "date": "2025-12-07",
+      "description": "Segunda jornada de primarias, donde los delegados seleccionan a los candidatos finales.",
+      "type": "voting",
+      "category": "voters",
+      "icon": "vote",
+      "color": "#059669"
+    },
+    {
+      "id": 9,
+      "name": "Fecha límite de inscripción de candidaturas",
+      "date": "2025-12-23",
+      "description": "Último día para presentar solicitudes de inscripción de candidaturas ante el JNE.",
+      "type": "deadline",
+      "category": "organizations",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 10,
+      "name": "Fin del periodo de tachas e impugnaciones",
+      "date": "2026-03-13",
+      "description": "Última fecha para presentar tachas e impugnaciones contra candidaturas.",
+      "type": "deadline",
+      "category": "all",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 11,
+      "name": "Cierre del registro oficial de candidaturas",
+      "date": "2026-03-14",
+      "description": "Fecha límite para tener candidaturas oficialmente inscritas.",
+      "type": "deadline",
+      "category": "organizations",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 12,
+      "name": "Sorteo de miembros de mesa",
+      "date": "2026-01-29",
+      "description": "Sorteo oficial para elegir a los miembros de mesa.",
+      "type": "registration",
+      "category": "members",
+      "icon": "users",
+      "color": "#10B981"
+    },
+    {
+      "id": 13,
+      "name": "Publicación de miembros de mesa",
+      "date": "2026-02-11",
+      "description": "Publicación oficial de los miembros de mesa seleccionados.",
+      "type": "announcement",
+      "category": "members",
+      "icon": "file-text",
+      "color": "#3B82F6"
+    },
+    {
+      "id": 14,
+      "name": "Inicio de propaganda electoral",
+      "date": "2026-02-12",
+      "description": "Empieza la difusión de propaganda política permitida.",
+      "type": "campaign",
+      "category": "all",
+      "icon": "megaphone",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": 15,
+      "name": "Fin de propaganda electoral",
+      "date": "2026-04-09",
+      "description": "Último día para difundir propaganda política.",
+      "type": "deadline",
+      "category": "all",
+      "icon": "clock",
+      "color": "#EF4444"
+    },
+    {
+      "id": 16,
+      "name": "Elecciones Generales – Primera Vuelta",
+      "date": "2026-04-12",
+      "description": "Elección para Presidente, Congreso y Parlamento Andino.",
+      "type": "voting",
+      "category": "voters",
+      "icon": "vote",
+      "color": "#059669"
+    },
+    {
+      "id": 17,
+      "name": "Elecciones Generales – Segunda Vuelta (si aplica)",
+      "date": "2026-06-07",
+      "description": "Segunda vuelta presidencial para definir ganador.",
+      "type": "voting",
+      "category": "voters",
+      "icon": "vote",
+      "color": "#059669"
+    }
+  ]
+}

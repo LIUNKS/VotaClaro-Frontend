@@ -22,6 +22,7 @@ const tabs = [
 ];
 
 export default function CandidatesPage() {
+  const { saveScrollPosition } = useScrollRestore({ key: 'candidates-page' });
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('presidenciales');
 
@@ -51,6 +52,8 @@ export default function CandidatesPage() {
   };
 
   const handleCandidateClick = (candidateId: number) => {
+    // Guardar posición antes de navegar
+    saveScrollPosition();
     router.push(`/candidates/${candidateId}?from=candidates`);
   };
 
