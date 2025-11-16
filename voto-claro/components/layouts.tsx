@@ -10,6 +10,7 @@ const navItems = [
   { name: 'Noticias', href: '/noticias' },
   { name: 'Candidatos', href: '/candidates' },
   { name: 'Miembros', href: '/miembro-mesa' },
+  { name: 'Calendario', href: '/calendario' },
 ];
 
 interface HeaderProps {
@@ -47,6 +48,15 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
               {item.name}
             </Link>
           ))}
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              pathname === '/members' 
+                ? 'bg-primary/10 text-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+              Miembros
+          </button>
           <button 
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               pathname === '/profile' 

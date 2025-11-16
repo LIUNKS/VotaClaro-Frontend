@@ -15,9 +15,13 @@ export function CandidatesGrid() {
 
   const handleCandidateClick = (candidateId: number, e: React.MouseEvent) => {
     e.preventDefault();
-    // Usar la función del hook
     saveScrollPosition();
     router.push(`/candidates/${candidateId}?from=home`);
+  };
+
+  const handleViewAllClick = () => {
+    saveScrollPosition();
+    router.push('/candidates');
   };
 
   return (
@@ -69,11 +73,12 @@ export function CandidatesGrid() {
           ))}
         </div>
 
-        <Link href="/candidates">
-          <button className="w-full mt-4 lg:mt-6 py-2 lg:py-3 px-4 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm lg:text-base">
-            Ver Todos los Candidatos
-          </button>
-        </Link>
+        <button 
+          onClick={handleViewAllClick}
+          className="w-full mt-4 lg:mt-6 py-2 lg:py-3 px-4 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm lg:text-base"
+        >
+          Ver Todos los Candidatos
+        </button>
       </CardContent>
     </Card>
   );

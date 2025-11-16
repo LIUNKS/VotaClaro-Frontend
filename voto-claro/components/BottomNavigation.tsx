@@ -11,7 +11,7 @@ export function BottomNavigation() {
     { id: 'home', icon: Home, label: 'Inicio', href: '/' },
     { id: 'noticias', icon: Newspaper, label: 'Noticias', href: '/noticias' },
     { id: 'candidates', icon: Users, label: 'Candidatos', href: '/candidates' },
-    { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/miembro-mesa' },
+    { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/members' },
     { id: 'calendar', icon: Calendar, label: 'Calendario', href: '/calendar' },
   ] as const;
 

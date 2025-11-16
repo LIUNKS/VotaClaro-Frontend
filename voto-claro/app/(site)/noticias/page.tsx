@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { NewsError } from '@/components/ui/NewsError';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { useNews, useSearch } from '@/hooks';
+import { useNews, useSearch, useScrollRestore } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import type { NewsCardData } from '@/app/services/newsService';
 
 export default function NoticiasPage() {
+  const { saveScrollPosition } = useScrollRestore({ key: 'noticias-page' });
   const router = useRouter();
   const { news, loading, error, refetch } = useNews(100);
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,6 +78,8 @@ export default function NoticiasPage() {
   };
 
   const handleNewsClick = (index: number, link?: string) => {
+    // Guardar posición antes de navegar
+    saveScrollPosition();
     router.push(`/noticias/${index}?from=noticias`);
   };
 
