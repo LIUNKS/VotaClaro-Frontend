@@ -100,8 +100,8 @@ function parseRSSXML(xmlString: string): RSSNewsItem[] {
 			}
 		}
     
-	// Log de resumen CON URLS COMPLETAS
-	const _itemsWithImages = items.filter(item => item.image).length;
+		// Log de resumen CON URLS COMPLETAS
+		const _itemsWithImages = items.filter(item => item.image).length;
 
 		const categories = [...new Set(items.map(item => item.category))];
 		categories.forEach(cat => {
