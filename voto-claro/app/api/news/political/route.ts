@@ -183,13 +183,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       throw new Error('Empty RSS content received');
     }
 
-    console.log('RSS content length:', xmlContent.length);
-
     // Parse RSS content
     const newsItems = parseRSSXML(xmlContent);
     
-    console.log('Parsed news items:', newsItems.length);
-
     if (newsItems.length === 0) {
       console.warn('No news items parsed from RSS feed');
     }
