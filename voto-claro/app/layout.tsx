@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SWRegister } from '../components/SWRegister';
 
 export const metadata: Metadata = {
   title: 'Vota informado | MiVoto',
@@ -35,7 +36,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0d47a1" />
+      </head>
       <body className="antialiased">
+        <SWRegister />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
