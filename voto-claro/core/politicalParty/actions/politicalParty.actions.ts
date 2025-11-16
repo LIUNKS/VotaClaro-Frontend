@@ -23,21 +23,22 @@ export const politicalPartyActions = {
 		}
 
 		// Usar axios sin especificar headers para que detecte correctamente el FormData
-		const response = await axios.post<PoliticalParty>(
+		const response = await axios.post<{ body: PoliticalParty }>(
 			`${API_URL}/politicalParty/add`,
 			formData
 		);
 
-		return response.data;
+		return response.data.body;
 	},
 
 	async getAllPoliticalParties(): Promise<PoliticalParty[]> {
-		const response = await axios.get<PoliticalParty[]>(`${API_URL}/politicalParty/all`);
-		return response.data;
+		const response = await axios.get<{ body: PoliticalParty[] }>(`${API_URL}/politicalParty/list`);
+		// La API devuelve { body: PoliticalParty[] }, así que accedemos a body
+		return Array.isArray(response.data.body) ? response.data.body : [];
 	},
 
 	async getPoliticalPartyById(id: string): Promise<PoliticalParty> {
-		const response = await axios.get<PoliticalParty>(`${API_URL}/politicalParty/${id}`);
-		return response.data;
+		const response = await axios.get<{ body: PoliticalParty }>(`${API_URL}/politicalParty/${id}`);
+		return response.data.body;
 	},
 };

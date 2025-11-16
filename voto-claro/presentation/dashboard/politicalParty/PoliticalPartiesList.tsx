@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
 export function PoliticalPartiesList() {
-	const { parties, getAllParties, loading } = usePoliticalParty();
+	const { parties, getAllParties, loading, error } = usePoliticalParty();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -16,6 +16,35 @@ export function PoliticalPartiesList() {
 	}, []);
 
 	if (loading) return <p>Cargando partidos políticos...</p>;
+
+	if (error) {
+		return (
+			<div className="space-y-4">
+				<h1 className="text-3xl font-bold">Partidos Políticos</h1>
+				<div className="text-center text-red-500">
+					<p>Error al cargar los partidos políticos: {error}</p>
+					<Button onClick={getAllParties} className="mt-4">
+						Reintentar
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
+	// Verificar que parties sea un array
+	if (!Array.isArray(parties)) {
+		return (
+			<div className="space-y-4">
+				<h1 className="text-3xl font-bold">Partidos Políticos</h1>
+				<div className="text-center text-yellow-500">
+					<p>Error: Los datos de partidos no son válidos</p>
+					<Button onClick={getAllParties} className="mt-4">
+						Reintentar
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-4">
