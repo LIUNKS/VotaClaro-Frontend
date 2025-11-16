@@ -22,7 +22,8 @@ const nextConfig: NextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'fvrp2459-8080.brs.devtunnels.ms',
-			}
+				pathname: '/uploads/**',
+			},
 		],
 	},
 	allowedDevOrigins: ['https://web.francopm.dev'],
