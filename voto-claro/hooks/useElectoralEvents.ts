@@ -21,7 +21,7 @@ export function useElectoralEvents() {
   useEffect(() => {
     const loadEvents = () => {
       try {
-        setEvents(electoralData.electoralEvents);
+        setEvents(electoralData.electoralEvents as ElectoralEvent[]);
       } catch (error) {
         console.error('Error loading electoral events:', error);
       } finally {
