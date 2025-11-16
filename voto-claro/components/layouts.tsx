@@ -8,8 +8,8 @@ import { useTourContext } from '@/hooks/useTourContext';
 const navItems = [
   { name: 'Inicio', href: '/' },
   { name: 'Noticias', href: '/noticias' },
+  { name: 'Partidos', href: '/partidos' },
   { name: 'Candidatos', href: '/candidates' },
-  { name: 'Miembros', href: '/miembro-mesa' },
   { name: 'Calendario', href: '/calendario' },
 ];
 

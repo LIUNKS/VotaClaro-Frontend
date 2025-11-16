@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users } from 'lucide-react';
 
 interface RoleCardProps {
   title: string;
@@ -41,36 +41,36 @@ function RoleCard({ title, description, responsibilities }: RoleCardProps) {
 export function RolesSection() {
   const roles = [
     {
-      title: "Presidente",
-      description: "Máxima autoridad de la mesa. Dirige y modera el proceso electoral.",
+      title: 'Presidente',
+      description: 'Máxima autoridad de la mesa. Dirige y modera el proceso electoral.',
       responsibilities: [
-        "Dirige y modera el proceso electoral",
-        "Firma las cédulas de votación",
-        "Firma las actas oficiales",
-        "Responsable de la instalación y cierre",
-        "Anuncia el inicio y fin de votación"
+        'Dirige y modera el proceso electoral',
+        'Firma las cédulas de votación',
+        'Firma las actas oficiales',
+        'Responsable de la instalación y cierre',
+        'Anuncia el inicio y fin de votación'
       ]
     },
     {
-      title: "Secretario",
-      description: "Encargado de llenar todos los documentos electorales oficiales.",
+      title: 'Secretario',
+      description: 'Encargado de llenar todos los documentos electorales oficiales.',
       responsibilities: [
-        "Llena las Actas de Instalación, Sufragio y Escrutinio",
-        "Registra meticulosamente cada voto",
-        "Mantiene la precisión en documentos",
-        "Lleva el control de votantes",
-        "Registra incidencias en actas"
+        'Llena las Actas de Instalación, Sufragio y Escrutinio',
+        'Registra meticulosamente cada voto',
+        'Mantiene la precisión en documentos',
+        'Lleva el control de votantes',
+        'Registra incidencias en actas'
       ]
     },
     {
-      title: "Tercer Miembro (Vocal)",
-      description: "Apoya en las tareas de verificación y control del proceso.",
+      title: 'Tercer Miembro (Vocal)',
+      description: 'Apoya en las tareas de verificación y control del proceso.',
       responsibilities: [
-        "Maneja la lista de electores (padrón)",
-        "Verifica identidad de votantes",
-        "Solicita firma y huella digital",
-        "Entrega hologramas (stickers)",
-        "Apoya en verificaciones generales"
+        'Maneja la lista de electores (padrón)',
+        'Verifica identidad de votantes',
+        'Solicita firma y huella digital',
+        'Entrega hologramas (stickers)',
+        'Apoya en verificaciones generales'
       ]
     }
   ];

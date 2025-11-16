@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Users, GraduationCap, Newspaper, Calendar } from 'lucide-react';
+import { Home, Users,Flag, Newspaper, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -10,16 +10,16 @@ export function BottomNavigation() {
   const navItems = [
     { id: 'home', icon: Home, label: 'Inicio', href: '/' },
     { id: 'noticias', icon: Newspaper, label: 'Noticias', href: '/noticias' },
+    { id: 'partidos', icon: Flag, label: 'Partidos', href: '/partidos' },
     { id: 'candidates', icon: Users, label: 'Candidatos', href: '/candidates' },
-    { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/miembro-mesa' },
     { id: 'calendar', icon: Calendar, label: 'Calendario', href: '/calendario' },
   ] as const;
 
   const getActiveTab = () => {
     if (pathname === '/') return 'home';
     if (pathname === '/noticias' || pathname.startsWith('/noticias/')) return 'noticias';
+    if (pathname === '/partidos' || pathname.startsWith('/partidos/')) return 'partidos';
     if (pathname === '/candidates' || pathname.startsWith('/candidates/')) return 'candidates';
-    if (pathname === '/miembro-mesa') return 'members';
     if (pathname === '/profile') return 'profile';
     return 'home'; // default
   };
