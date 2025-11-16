@@ -55,7 +55,7 @@ export default function CandidatesPage() {
 		setSearchTerm('');
 	};
 
-	const handleCandidateClick = (candidateId: number) => {
+	const handleCandidateClick = (candidateId: string) => {
 		saveScrollPosition();
 		router.push(`/candidates/${candidateId}?from=candidates`);
 	};

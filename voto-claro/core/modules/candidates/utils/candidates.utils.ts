@@ -3,12 +3,12 @@ import { CandidateApiData, AdaptedCandidate } from '@/core/candidates/interfaces
 export const candidatesUtils = {
 	adaptCandidateData(candidates: CandidateApiData[]): AdaptedCandidate[] {
 		return candidates.map(candidate => ({
-			id: parseInt(candidate.id),
+			id: candidate.id,
 			name: candidate.nombre_completo,
 			party: `${candidate.datos_personales.lugar_nacimiento.departamento}, ${candidate.datos_personales.lugar_nacimiento.provincia}`,
 			image: '/placeholder-avatar.jpg',
 			dni: candidate.dni,
-			sexo: candidate.datos_personales.sexo,
+			sexo: candidate.datos_personales.sexo === 'M' ? 'Masculino' : 'Femenino',
 			educacion: candidate.datos_personales.educacion,
 			antecedentes: candidate.antecedentes.total,
 			ingresos: candidate.ingresos.total
@@ -17,7 +17,13 @@ export const candidatesUtils = {
 
 	formatLastUpdated(lastUpdated: string | null): string {
 		if (!lastUpdated) return 'No disponible';
-		return new Date(lastUpdated).toLocaleString('es-PE');
+		return new Date(lastUpdated).toLocaleString('es-PE', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 	},
 
 	getCandidateLocation(candidate: CandidateApiData): string {
@@ -34,5 +40,26 @@ export const candidatesUtils = {
       candidate.party.toLowerCase().includes(lowerSearchTerm) ||
       candidate.dni.includes(searchTerm)
 		);
+	},
+
+	formatCurrency(amount: number): string {
+		return new Intl.NumberFormat('es-PE', {
+			style: 'currency',
+			currency: 'PEN'
+		}).format(amount);
+	},
+
+	getAgeFromBirthDate(birthDate: string): number {
+		const [day, month, year] = birthDate.split('/');
+		const birth = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+		const today = new Date();
+		let age = today.getFullYear() - birth.getFullYear();
+		const monthDiff = today.getMonth() - birth.getMonth();
+        
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+			age--;
+		}
+        
+		return age;
 	}
 };

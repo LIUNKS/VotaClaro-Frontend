@@ -45,7 +45,7 @@ export interface CandidatesApiResponse {
 }
 
 export interface AdaptedCandidate {
-  id: number;
+  id: string;
   name: string;
   party: string;
   image: string;

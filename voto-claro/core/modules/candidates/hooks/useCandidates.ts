@@ -26,18 +26,14 @@ export const useCandidates = () => {
 			const errorMessage = err instanceof Error ? err.message : 'Error al cargar candidatos';
 			setError(errorMessage);
 			console.error('Error in useCandidates:', err);
-			throw new Error(errorMessage);
 		} finally {
 			setLoading(false);
 		}
 	}, []);
 
-	// Función mejorada para obtener candidato por ID - ahora es síncrona
-	const getCandidateById = useCallback((id: string): Promise<CandidateApiData | null> => {
-		return new Promise((resolve) => {
-			const candidate = candidates.find(c => c.id === id) || null;
-			resolve(candidate);
-		});
+	// Función para obtener candidato por ID
+	const getCandidateById = useCallback((id: string): CandidateApiData | null => {
+		return candidates.find(c => c.id === id) || null;
 	}, [candidates]);
 
 	const getAllCandidates = async () => {
