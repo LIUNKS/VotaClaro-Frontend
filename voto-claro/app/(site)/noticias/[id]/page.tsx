@@ -99,51 +99,37 @@ export default function NoticiaDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
         
-        <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-64 bg-muted rounded-lg"></div>
-            <div className="h-8 bg-muted rounded w-3/4"></div>
-            <div className="h-4 bg-muted rounded w-1/2"></div>
-            <div className="space-y-2">
-              <div className="h-4 bg-muted rounded"></div>
-              <div className="h-4 bg-muted rounded"></div>
-              <div className="h-4 bg-muted rounded w-4/5"></div>
-            </div>
+      <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-64 bg-muted rounded-lg"></div>
+          <div className="h-8 bg-muted rounded w-3/4"></div>
+          <div className="h-4 bg-muted rounded w-1/2"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-muted rounded"></div>
+            <div className="h-4 bg-muted rounded"></div>
+            <div className="h-4 bg-muted rounded w-4/5"></div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     );
   }
 
   if (error || !currentNews) {
     return (
-      <div className="min-h-screen bg-background">
         
-        <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
-          <div className="text-center py-16">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Noticia no encontrada</h2>
-            <p className="text-muted-foreground mb-6">La noticia que buscas no está disponible.</p>
-            <Button onClick={handleBackClick}>Volver a noticias</Button>
-          </div>
-        </main>
-        
-        {/* Footer - Desktop Only */}
-        <div className="hidden lg:block">
-          <Footer />
+      <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
+        <div className="text-center py-16">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Noticia no encontrada</h2>
+          <p className="text-muted-foreground mb-6">La noticia que buscas no está disponible.</p>
+          <Button onClick={handleBackClick}>Volver a noticias</Button>
         </div>
-        
-        {/* Bottom Navigation - Mobile Only */}
-        <div className="lg:hidden">
-          <BottomNavigation />
-        </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <Button variant="ghost" size="icon" onClick={handleBackClick}>
@@ -254,6 +240,6 @@ export default function NoticiaDetailPage() {
           </div>
         </article>
       </main>
-    </div>
+    </>
   );
 }

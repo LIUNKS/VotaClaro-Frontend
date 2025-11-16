@@ -4,6 +4,7 @@ import { ModeToggle } from './toogle-dark-mode';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTourContext } from '@/hooks/useTourContext';
+import LogoAnimation from './animations/logo-draw';
 
 const navItems = [
   { name: 'Inicio', href: '/' },
@@ -29,8 +30,8 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
   return (
     <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10 tour-welcome">
       <div className="max-w-md lg:max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-foreground text-base lg:text-lg">Elecciones 2026</span>
+        <div className="flex items-center gap-2 w-44">
+          <LogoAnimation />
         </div>
           
         {/* Desktop Navigation */}
