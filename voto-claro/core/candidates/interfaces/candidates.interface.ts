@@ -1,6 +1,7 @@
 export interface CandidateApiData {
   id: string;
   dni: string;
+  url_img?: string;
   nombre_completo: string;
   datos_personales: {
     fecha_nacimiento: string;
