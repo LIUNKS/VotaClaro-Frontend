@@ -12,7 +12,8 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSearch, useScrollRestore } from '@/hooks';
-import { useCandidatesApi } from '@/hooks/useCandidates';
+import { useCandidates } from '@/core/modules/candidates/hooks/useCandidates';
+import { candidatesUtils } from '@/core/modules/candidates/utils/candidates.utils';
 
 const tabs = [
 	{ id: 'presidenciales', label: 'Presidenciales', active: true },
@@ -28,25 +29,15 @@ export default function CandidatesPage() {
 
 	// Hook para obtener candidatos de la API
 	const {
-		candidates: apiCandidates,
 		loading: apiLoading,
 		error: apiError,
+		getAdaptedCandidates,
 		refetch,
 		lastUpdated
-	} = useCandidatesApi();
+	} = useCandidates();
 
-	// Adaptar los datos de la API al formato local
-	const adaptedCandidates = apiCandidates.map(candidate => ({
-		id: parseInt(candidate.id),
-		name: candidate.nombre_completo,
-		party: `${candidate.datos_personales.lugar_nacimiento.departamento}, ${candidate.datos_personales.lugar_nacimiento.provincia}`,
-		image: '/placeholder-avatar.jpg',
-		dni: candidate.dni,
-		sexo: candidate.datos_personales.sexo,
-		educacion: candidate.datos_personales.educacion,
-		antecedentes: candidate.antecedentes.total,
-		ingresos: candidate.ingresos.total
-	}));
+	// Obtener candidatos adaptados
+	const adaptedCandidates = getAdaptedCandidates();
 
 	// Hook de búsqueda
 	const {
@@ -151,7 +142,7 @@ export default function CandidatesPage() {
 				{/* Last Updated Info */}
 				{lastUpdated && (
 					<p className="text-xs text-muted-foreground mt-2">
-                        Última actualización: {new Date(lastUpdated).toLocaleString('es-PE')}
+                        Última actualización: {candidatesUtils.formatLastUpdated(lastUpdated)}
 					</p>
 				)}
 			</div>
