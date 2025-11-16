@@ -1,39 +1,66 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import Joyride from 'react-joyride';
-import { Calendar, Zap, BookOpen, AlertCircle, CheckCircle2, Menu, Users, Flag } from 'lucide-react';
+import {
+	Calendar,
+	Zap,
+	BookOpen,
+	AlertCircle,
+	CheckCircle2,
+	Menu,
+	Users,
+	Flag,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { VotingLocation, ItemsGrid } from '@/components/home';
 import NewsList from './newsList';
+import { usePoliticalParty } from '@/core/modules/politicalParty/hooks/usePoliticalParty';
 import { useTour } from '@/hooks/useTour';
 import { useTourContext } from '@/hooks/useTourContext';
 import { useNews } from '@/hooks';
-import { getFeaturedCandidates } from '@/lib/candidates-data';
+import { useCandidates } from '@/core/modules/candidates/hooks/useCandidates';
+import { WelcomeIntro } from '@/components/animations';
 
 export default function HomePage() {
-	const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
+	const { runTour, tourStep, handleTourCallback, startTour, isClient } =
+    useTour();
 	const { setTourConfig } = useTourContext();
-	const [currentTourTarget, setCurrentTourTarget] = useState<string | null>(null);
+	const [currentTourTarget, setCurrentTourTarget] = useState<string | null>(
+		null
+	);
 	const { news, loading, error } = useNews(4);
-	const [partidos, setPartidos] = useState([]);
+	const [showContent, setShowContent] = useState(false);
+	const [introComplete, setIntroComplete] = useState(false);
 
-	// Cargar partidos desde JSON
+	// Variable de entorno para forzar mostrar intro (desarrollo)
+	const forceShowIntro = process.env.NEXT_PUBLIC_SHOW_INTRO === 'true';
+
+	const {
+		loading: candidatesLoading,
+		error: candidatesError,
+		getAdaptedCandidates,
+	} = useCandidates();
+
+	const { parties, getAllParties, loading: partiesLoading } = usePoliticalParty();
+
+	const adaptedCandidates = getAdaptedCandidates();
+	const candidatos = useMemo(() => adaptedCandidates.slice(0, 3), [adaptedCandidates]);
+	const partidosDestacados = useMemo(() => parties.slice(0, 3), [parties]);
+
+	// Cargar partidos desde API solo una vez
 	useEffect(() => {
-		const loadPartidos = async () => {
-			try {
-				const response = await fetch('/partidos.json');
-				const data = await response.json();
-				// Tomar solo los primeros 3 partidos
-				setPartidos(data.partidos.slice(0, 3));
-			} catch (error) {
-				console.error('Error loading partidos:', error);
-			}
+		let isMounted = true;
+		if (isMounted && parties.length === 0 && !partiesLoading) {
+			getAllParties();
+		}
+		return () => {
+			isMounted = false;
 		};
-		loadPartidos();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -41,14 +68,27 @@ export default function HomePage() {
 		return () => setTourConfig({ showTourButton: false });
 	}, [setTourConfig, startTour]);
 
+	// Manejar completado de intro
+	const handleIntroComplete = () => {
+		setIntroComplete(true);
+		setTimeout(() => {
+			setShowContent(true);
+		}, 100);
+	};
+
 	const shouldApplyOpacity = (elementClass: string) => {
 		return runTour && currentTourTarget && currentTourTarget !== elementClass;
 	};
 
 	const getTourStyles = () => {
-		const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
-		const hasTarget = currentTourTarget && currentTourTarget !== '.tour-welcome' && currentTourTarget !== '.tour-navigation';
-    
+		const isDark =
+      typeof window !== 'undefined' &&
+      document.documentElement.classList.contains('dark');
+		const hasTarget =
+      currentTourTarget &&
+      currentTourTarget !== '.tour-welcome' &&
+      currentTourTarget !== '.tour-navigation';
+
 		return {
 			options: {
 				primaryColor: '#3b82f6',
@@ -56,7 +96,9 @@ export default function HomePage() {
 				textColor: isDark ? 'hsl(var(--popover-foreground))' : '#1f2937',
 				overlayColor: hasTarget
 					? 'rgba(0, 0, 0, 0)'
-					: isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)',
+					: isDark
+						? 'rgba(0, 0, 0, 0.3)'
+						: 'rgba(0, 0, 0, 0.2)',
 				spotlightShadow: '0 0 0 0 transparent',
 				spotlightClicks: true,
 				zIndex: 10000,
@@ -169,15 +211,15 @@ export default function HomePage() {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const customTourCallback = (data: any): void => {
 		const { step, index, status, action } = data;
-    
+
 		if (step && tourSteps[index]) {
 			setCurrentTourTarget(tourSteps[index].target);
 		}
-    
+
 		if (status === 'finished' || status === 'skipped' || action === 'close') {
 			setCurrentTourTarget(null);
 		}
-    
+
 		handleTourCallback(data);
 	};
 
@@ -189,7 +231,9 @@ export default function HomePage() {
 					<CardHeader className="pb-4">
 						<div className="flex items-center gap-4">
 							<div className="space-y-1">
-								<h3 className="text-xl font-bold tracking-tight">¡Bienvenido a VotoClaro!</h3>
+								<h3 className="text-xl font-bold tracking-tight">
+                  ¡Bienvenido a VotoClaro!
+								</h3>
 								<Badge variant="secondary" className="text-xs">
                   Tu guía electoral completa
 								</Badge>
@@ -198,8 +242,9 @@ export default function HomePage() {
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<p className="text-muted-foreground leading-relaxed">
-              Te ayudaremos a conocer todas las funciones de tu aplicación electoral.
-              Este tour te mostrará cómo usar VotoClaro para ejercer tu voto de manera informada y segura.
+              Te ayudaremos a conocer todas las funciones de tu aplicación
+              electoral. Este tour te mostrará cómo usar VotoClaro para ejercer
+              tu voto de manera informada y segura.
 						</p>
 						<Separator />
 						<Card className="bg-blue-50/80 dark:bg-slate-800/80 border-blue-200/60 dark:border-blue-400/50 backdrop-blur-md">
@@ -209,8 +254,13 @@ export default function HomePage() {
 										<Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 									</div>
 									<div className="flex-1">
-										<p className="text-sm font-semibold text-blue-900 dark:text-blue-100">Consejo</p>
-										<p className="text-xs text-blue-800 dark:text-blue-200 mt-1">Haz clic en &quot;Siguiente&quot; para avanzar, o &quot;Saltar tour&quot; para omitir esta guía.</p>
+										<p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                      Consejo
+										</p>
+										<p className="text-xs text-blue-800 dark:text-blue-200 mt-1">
+                      Haz clic en &quot;Siguiente&quot; para avanzar, o
+                      &quot;Saltar tour&quot; para omitir esta guía.
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -232,8 +282,9 @@ export default function HomePage() {
 					</CardHeader>
 					<CardContent className="space-y-3">
 						<p className="text-muted-foreground leading-relaxed">
-              Mantente informado con las últimas noticias sobre el proceso electoral.
-              Aquí encontrarás información actualizada y confiable desde fuentes oficiales.
+              Mantente informado con las últimas noticias sobre el proceso
+              electoral. Aquí encontrarás información actualizada y confiable
+              desde fuentes oficiales.
 						</p>
 						<Card className="bg-emerald-50/80 dark:bg-slate-800/80 border-emerald-200/60 dark:border-emerald-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
@@ -242,7 +293,10 @@ export default function HomePage() {
 										<CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
 									</div>
 									<div className="flex-1">
-										<p className="text-xs text-emerald-700 dark:text-emerald-200 leading-relaxed">Acceso a noticias verificadas y actualizadas en tiempo real</p>
+										<p className="text-xs text-emerald-700 dark:text-emerald-200 leading-relaxed">
+                      Acceso a noticias verificadas y actualizadas en tiempo
+                      real
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -263,9 +317,27 @@ export default function HomePage() {
 					</CardHeader>
 					<CardContent className="space-y-3">
 						<p className="text-muted-foreground leading-relaxed">
-              Explora los perfiles completos de los candidatos: sus propuestas, trayectoria profesional
-              y planes de gobierno. Tomar una decisión informada es tu derecho.
+              Explora los perfiles completos de los candidatos: sus propuestas,
+              trayectoria profesional y planes de gobierno. Tomar una decisión
+              informada es tu derecho.
 						</p>
+						<ul className="text-sm list-disc pl-5 text-muted-foreground">
+							<li>
+								<strong>Nombre:</strong> Identificación del candidato.
+							</li>
+							<li>
+								<strong>Partido:</strong> Agrupación política a la que
+                pertenece.
+							</li>
+							<li>
+								<strong>Imagen:</strong> Foto del candidato (si está
+                disponible).
+							</li>
+							<li>
+								<strong>Ver todos:</strong> Usa el botón para ver la lista
+                completa de candidatos.
+							</li>
+						</ul>
 						<Card className="bg-purple-50/80 dark:bg-slate-800/80 border-purple-200/60 dark:border-purple-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
 								<div className="flex items-center gap-3">
@@ -273,7 +345,9 @@ export default function HomePage() {
 										<BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
 									</div>
 									<div className="flex-1">
-										<p className="text-xs text-purple-700 dark:text-purple-200 leading-relaxed">Información verificada de cada candidato y sus propuestas</p>
+										<p className="text-xs text-purple-700 dark:text-purple-200 leading-relaxed">
+                      Información verificada de cada candidato y sus propuestas
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -294,9 +368,27 @@ export default function HomePage() {
 					</CardHeader>
 					<CardContent className="space-y-3">
 						<p className="text-muted-foreground leading-relaxed">
-              Conoce las organizaciones políticas que participan en las elecciones.
-              Explora sus ideologías, propuestas y candidatos postulados.
+              Conoce las organizaciones políticas que participan en las
+              elecciones. Explora sus ideologías, propuestas y candidatos
+              postulados.
 						</p>
+						<ul className="text-sm list-disc pl-5 text-muted-foreground">
+							<li>
+								<strong>Nombre:</strong> Nombre oficial del partido o
+                movimiento.
+							</li>
+							<li>
+								<strong>Descripción breve:</strong> Resumen de su propuesta o
+                ideología.
+							</li>
+							<li>
+								<strong>Logo:</strong> Identificador visual del partido.
+							</li>
+							<li>
+								<strong>Ver todos:</strong> Usa el botón para ver la lista
+                completa de partidos.
+							</li>
+						</ul>
 						<Card className="bg-blue-50/80 dark:bg-slate-800/80 border-blue-200/60 dark:border-blue-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
 								<div className="flex items-center gap-3">
@@ -304,7 +396,10 @@ export default function HomePage() {
 										<Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 									</div>
 									<div className="flex-1">
-										<p className="text-xs text-blue-700 dark:text-blue-200 leading-relaxed">Información completa sobre partidos y movimientos políticos</p>
+										<p className="text-xs text-blue-700 dark:text-blue-200 leading-relaxed">
+                      Información completa sobre partidos y movimientos
+                      políticos
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -331,15 +426,20 @@ export default function HomePage() {
 					<CardContent className="space-y-3">
 						<p className="text-muted-foreground leading-relaxed">
               Ingresa tu DNI para encontrar tu local de votación específico.
-              Conoce la ubicación exacta, tu mesa asignada y todas las facilidades disponibles.
+              Conoce la ubicación exacta, tu mesa asignada y todas las
+              facilidades disponibles.
 						</p>
 						<Card className="bg-orange-50/80 dark:bg-slate-800/80 border-orange-200/60 dark:border-orange-400/50 backdrop-blur-md">
 							<CardContent className="p-4">
 								<div className="flex items-start gap-3">
 									<AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
 									<div className="flex-1">
-										<p className="text-sm font-semibold text-orange-900 dark:text-orange-100">No olvides tu DNI</p>
-										<p className="text-xs text-orange-800 dark:text-orange-200 mt-1">Necesitarás tu documento de identidad para votar</p>
+										<p className="text-sm font-semibold text-orange-900 dark:text-orange-100">
+                      No olvides tu DNI
+										</p>
+										<p className="text-xs text-orange-800 dark:text-orange-200 mt-1">
+                      Necesitarás tu documento de identidad para votar
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -361,13 +461,16 @@ export default function HomePage() {
 					<CardContent className="space-y-3">
 						<p className="text-muted-foreground leading-relaxed">
               No te pierdas ninguna fecha importante del proceso electoral.
-              Consulta plazos de inscripción, debates y por supuesto, el día de las elecciones.
+              Consulta plazos de inscripción, debates y por supuesto, el día de
+              las elecciones.
 						</p>
 						<Card className="bg-yellow-50/80 dark:bg-slate-800/80 border-yellow-200/60 dark:border-yellow-400/50 backdrop-blur-md">
 							<CardContent className="p-3">
 								<div className="flex items-center gap-3">
 									<Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-									<p className="text-xs text-yellow-700 dark:text-yellow-200 leading-relaxed">Mantente al día con todas las fechas clave del proceso</p>
+									<p className="text-xs text-yellow-700 dark:text-yellow-200 leading-relaxed">
+                    Mantente al día con todas las fechas clave del proceso
+									</p>
 								</div>
 							</CardContent>
 						</Card>
@@ -388,7 +491,8 @@ export default function HomePage() {
 					<CardContent className="space-y-4">
 						<p className="text-muted-foreground leading-relaxed">
               Accede a recursos especializados para miembros de mesa electoral.
-              Encuentra materiales de capacitación, formularios y toda la información necesaria para tu labor electoral.
+              Encuentra materiales de capacitación, formularios y toda la
+              información necesaria para tu labor electoral.
 						</p>
 						<Separator />
 						<Card className="bg-orange-50/80 dark:bg-slate-800/80 border-orange-200/60 dark:border-orange-400/50 backdrop-blur-md">
@@ -396,8 +500,13 @@ export default function HomePage() {
 								<div className="flex items-start gap-3">
 									<CheckCircle2 className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
 									<div className="flex-1">
-										<p className="text-sm font-semibold text-orange-900 dark:text-orange-100">Capacitación disponible</p>
-										<p className="text-xs text-orange-800 dark:text-orange-200 mt-1">Accede a materiales y guías para tu rol como miembro de mesa</p>
+										<p className="text-sm font-semibold text-orange-900 dark:text-orange-100">
+                      Capacitación disponible
+										</p>
+										<p className="text-xs text-orange-800 dark:text-orange-200 mt-1">
+                      Accede a materiales y guías para tu rol como miembro de
+                      mesa
+										</p>
 									</div>
 								</div>
 							</CardContent>
@@ -418,19 +527,23 @@ export default function HomePage() {
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<p className="text-muted-foreground leading-relaxed">
-              Usa el menú de navegación para explorar todas las secciones de VotoClaro.
-              También puedes acceder rápidamente desde el menú inferior en móviles.
+              Usa el menú de navegación para explorar todas las secciones de
+              VotoClaro. También puedes acceder rápidamente desde el menú
+              inferior en móviles.
 						</p>
 						<Separator />
 						<Card className="bg-emerald-50/80 dark:bg-slate-800/80 border-emerald-200/60 dark:border-emerald-400/50 backdrop-blur-md">
 							<CardContent className="p-4 space-y-3">
 								<div className="flex items-center gap-3">
 									<Menu className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-									<p className="text-xs text-emerald-700 dark:text-emerald-200 leading-relaxed">Menú principal para acceso rápido</p>
+									<p className="text-xs text-emerald-700 dark:text-emerald-200 leading-relaxed">
+                    Menú principal para acceso rápido
+									</p>
 								</div>
 								<p className="text-xs text-emerald-700 dark:text-slate-200 leading-relaxed">
-                  Ya conoces todas las funciones principales. Haz clic en el ícono de ayuda
-                  en la esquina superior derecha si quieres repetir este tour en cualquier momento.
+                  Ya conoces todas las funciones principales. Haz clic en el
+                  ícono de ayuda en la esquina superior derecha si quieres
+                  repetir este tour en cualquier momento.
 								</p>
 							</CardContent>
 						</Card>
@@ -441,12 +554,13 @@ export default function HomePage() {
 		},
 	];
 
-	// Obtener candidatos destacados
-	const candidatos = getFeaturedCandidates(3);
-
 	return (
 		<>
-			{isClient && (
+			{!introComplete && (
+				<WelcomeIntro onComplete={handleIntroComplete} forceShow={forceShowIntro} />
+			)}
+			
+			{isClient && showContent && (
 				<Joyride
 					steps={tourSteps}
 					run={runTour}
@@ -489,56 +603,77 @@ export default function HomePage() {
 						</div>
 					)}
 				</div>
-        
 				<div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:space-y-0 space-y-6">
 					{/* Left Column - Noticias */}
 					<div className="lg:col-span-8">
-						<section className={`tour-news transition-opacity duration-500 ${
-							shouldApplyOpacity('.tour-news') ? 'opacity-30' : 'opacity-100'
-						}`}>
+						<section
+							className={`tour-news transition-opacity duration-500 ${
+								shouldApplyOpacity('.tour-news') ? 'opacity-30' : 'opacity-100'
+							}`}
+						>
 							<NewsList />
 						</section>
 					</div>
 
 					{/* Right Column - Sidebar */}
-					<div className="lg:col-span-4 space-y-6">
+					<div className="lg:col-span-4 space-y-9">
 						{/* Mi Local de Votación */}
-						<section className={`tour-voting-location transition-opacity duration-500 ${
-							shouldApplyOpacity('.tour-voting-location') ? 'opacity-30' : 'opacity-100'
-						}`}>
+						<section
+							className={`tour-voting-location transition-opacity duration-500 ${
+								shouldApplyOpacity('.tour-voting-location')
+									? 'opacity-30'
+									: 'opacity-100'
+							}`}
+						>
 							<VotingLocation />
 						</section>
 
 						{/* Calendario Electoral */}
-						<section className={`tour-calendar transition-opacity duration-500 ${
-							shouldApplyOpacity('.tour-calendar') ? 'opacity-30' : 'opacity-100'
-						}`}>
+						<section
+							className={`tour-calendar transition-opacity duration-500 ${
+								shouldApplyOpacity('.tour-calendar')
+									? 'opacity-30'
+									: 'opacity-100'
+							}`}
+						>
 							<Link href="/calendario" className="block group">
-								<Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
-									<CardContent className="p-4 lg:p-4">
+								<Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+									<CardContent className="p-4 lg:p-8">
 										<div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
 											<Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
 										</div>
-                    
-										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Calendario Electoral</h3>
-										<p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
+
+										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">
+                      Calendario Electoral
+										</h3>
+										<p className="text-sm lg:text-base text-muted-foreground">
+                      No te pierdas las fechas importantes
+										</p>
 									</CardContent>
 								</Card>
 							</Link>
 						</section>
 
 						{/* Soy Miembro de Mesa */}
-						<section className={`tour-member transition-opacity duration-500 ${
-							shouldApplyOpacity('.tour-member') ? 'opacity-30' : 'opacity-100'
-						}`}>
+						<section
+							className={`tour-member transition-opacity duration-500 ${
+								shouldApplyOpacity('.tour-member')
+									? 'opacity-30'
+									: 'opacity-100'
+							}`}
+						>
 							<Link href="/miembro-mesa" className="block group">
 								<Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
-									<CardContent className="p-4 lg:p-4">
-										<div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
+									<CardContent className="p-4 lg:p-8">
+										<div className="w-full h-32 lg:h-40 bg-linear-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
 											<BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
 										</div>
-										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">Soy Miembro de Mesa</h3>
-										<p className="text-sm lg:text-base text-muted-foreground mb-0">Capacitación y materiales</p>
+										<h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">
+                      Soy Miembro de Mesa
+										</h3>
+										<p className="text-sm lg:text-base text-muted-foreground mb-0">
+                      Capacitación y materiales
+										</p>
 									</CardContent>
 								</Card>
 							</Link>
@@ -546,35 +681,98 @@ export default function HomePage() {
 					</div>
 				</div>
 
-				{/* Sección de Candidatos y Partidos - Full Width fuera del grid */}
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 lg:mt-8">
-					{/* Conoce a tus Candidatos */}
-					<section className={`tour-candidates transition-opacity duration-500 ${
+				{/* Candidatos y Partidos - Responsive two-up (abajo de noticias) */}
+				<div className="flex flex-col lg:flex-row gap-4 lg:gap-6 mt-6">
+					<div className={`w-full lg:w-1/2 tour-candidates transition-opacity duration-500 ${
 						shouldApplyOpacity('.tour-candidates') ? 'opacity-30' : 'opacity-100'
 					}`}>
-						<ItemsGrid
-							title="Conoce a tus Candidatos"
-							items={candidatos}
-							type="candidates"
-							viewAllText="Ver Todos los Candidatos"
-							viewAllPath="/candidates"
-							icon={Users}
-						/>
-					</section>
-
-					{/* Partidos Políticos */}
-					<section className={`tour-parties transition-opacity duration-500 ${
+						{candidatesLoading ? (
+						// Loading skeleton para candidatos
+							<Card className="hover:shadow-lg transition-shadow duration-200 h-full">
+								<CardContent className="p-4 lg:p-6 h-full flex flex-col">
+									<div className="flex items-center gap-2 mb-4 lg:mb-6">
+										<Users className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
+										<h3 className="font-semibold text-card-foreground text-base lg:text-lg">
+                                            Candidatos Destacados
+										</h3>
+									</div>
+									<div className="space-y-3 lg:space-y-4 grow">
+										{[...Array(3)].map((_, i) => (
+											<div key={i} className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg">
+												<div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-200 rounded-full animate-pulse"></div>
+												<div className="flex-1">
+													<div className="h-4 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
+													<div className="h-3 bg-gray-200 rounded w-24 animate-pulse"></div>
+												</div>
+											</div>
+										))}
+									</div>
+									<div className="w-full mt-4 lg:mt-6 py-2 lg:py-3 px-4 bg-gray-200 rounded-lg animate-pulse h-10"></div>
+								</CardContent>
+							</Card>
+						) : candidatesError ? (
+						// Error state para candidatos
+							<Card className="hover:shadow-lg transition-shadow duration-200 h-full">
+								<CardContent className="p-4 lg:p-6 h-full flex flex-col items-center justify-center">
+									<div className="text-center">
+										<AlertCircle className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+										<h3 className="font-semibold text-card-foreground mb-2">Error al cargar candidatos</h3>
+										<p className="text-sm text-muted-foreground mb-4">Datos no disponibles temporalmente</p>
+										<Link href="/candidates" className="text-primary hover:underline text-sm">
+                                            Ver todos los candidatos
+										</Link>
+									</div>
+								</CardContent>
+							</Card>
+						) : (
+						// Mostrar candidatos normalmente
+							<ItemsGrid
+								title="Candidatos Destacados"
+								items={candidatos}
+								type="candidates"
+								viewAllText="Ver todos los candidatos"
+								viewAllPath="/candidates"
+								icon={Users}
+							/>
+						)}
+					</div>
+					<div className={`w-full lg:w-1/2 tour-parties transition-opacity duration-500 ${
 						shouldApplyOpacity('.tour-parties') ? 'opacity-30' : 'opacity-100'
 					}`}>
-						<ItemsGrid
-							title="Partidos Políticos"
-							items={partidos}
-							type="partidos"
-							viewAllText="Ver Todos los Partidos"
-							viewAllPath="/partidos"
-							icon={Flag}
-						/>
-					</section>
+						{partiesLoading ? (
+							<Card className="hover:shadow-lg transition-shadow duration-200 h-full">
+								<CardContent className="p-4 lg:p-6 h-full flex flex-col">
+									<div className="flex items-center gap-2 mb-4 lg:mb-6">
+										<Flag className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
+										<h3 className="font-semibold text-card-foreground text-base lg:text-lg">
+											Partidos Destacados
+										</h3>
+									</div>
+									<div className="space-y-3 lg:space-y-4 grow">
+										{[...Array(3)].map((_, i) => (
+											<div key={i} className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg">
+												<div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-200 rounded-full animate-pulse"></div>
+												<div className="flex-1">
+													<div className="h-4 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
+													<div className="h-3 bg-gray-200 rounded w-24 animate-pulse"></div>
+												</div>
+											</div>
+										))}
+									</div>
+									<div className="w-full mt-4 lg:mt-6 py-2 lg:py-3 px-4 bg-gray-200 rounded-lg animate-pulse h-10"></div>
+								</CardContent>
+							</Card>
+						) : (
+							<ItemsGrid
+								title="Partidos"
+								items={partidosDestacados}
+								type="partidos"
+								viewAllText="Ver todos los partidos"
+								viewAllPath="/partidos"
+								icon={Flag}
+							/>
+						)}
+					</div>
 				</div>
 			</main>
 		</>

@@ -16,11 +16,8 @@ export interface TourStep extends Step {
 export function useTour() {
 	const [runTour, setRunTour] = useState(false);
 	const [tourStep, setTourStep] = useState(0);
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
+	// Detect client at initialization to avoid a synchronous setState in an effect
+	const [isClient] = useState<boolean>(() => typeof window !== 'undefined');
 
 	useEffect(() => {
 		if (!isClient) return;

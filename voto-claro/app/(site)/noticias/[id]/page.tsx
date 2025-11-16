@@ -3,26 +3,45 @@
 import { ArrowLeft, ExternalLink, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { BottomNavigation } from '@/components/BottomNavigation';
-import { Footer } from '@/components/ui/Footer';
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { NewsService } from '@/services/newsService';
+
+interface NewsItem {
+	id?: number;
+	title: string;
+	description: string;
+	image?: string;
+	link?: string;
+	pubDate: string;
+	creator?: string;
+	source: string;
+	contentEncoded?: string;
+	type?: string;
+}
+
+function NetworkErrorModal({ open, onClose }: { open: boolean, onClose: () => void }) {
+	if (!open) return null;
+	return (
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+			<div className="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center mx-4">
+				<h2 className="text-xl font-bold mb-4 text-red-600">Sin conexión a internet</h2>
+				<p className="mb-6 text-muted-foreground">Para visualizar este contenido debes conectarte a internet.</p>
+				<Button onClick={onClose} className="w-full">Cerrar</Button>
+			</div>
+		</div>
+	);
+}
 
 export default function NoticiaDetailPage() {
 	const params = useParams();
 	const router = useRouter();
-	const searchParams = useSearchParams();
-  
-	// Detectar desde dónde viene el usuario
-	const fromPage = searchParams.get('from');
-	const initialTab = fromPage === 'noticias' ? 'noticias' : 'home';
-  
-	const [activeTab, setActiveTab] = useState<'home' | 'noticias' | 'candidates' | 'members' | 'profile'>(initialTab);
-	const [currentNews, setCurrentNews] = useState<any>(null);
+
+	const [currentNews, setCurrentNews] = useState<NewsItem | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [networkError, setNetworkError] = useState(false);
 
 	const newsId = params.id ? parseInt(params.id as string, 10) : null;
   
@@ -37,27 +56,39 @@ export default function NoticiaDetailPage() {
 			try {
 				setLoading(true);
 				setError(null);
+				setNetworkError(false);
         
-				const response = await fetch('/api/news/political');
-				if (!response.ok) {
-					throw new Error('Error al cargar noticias');
-				}
-        
-				const data = await response.json();
-        
+				// Use NewsService which returns cached data when network fails
+				const data = await NewsService.fetchPoliticalNews();
+
 				if (data.success && data.data && Array.isArray(data.data)) {
-					const foundNews = data.data[newsId];
-          
+					const foundNews = data.data[newsId!];
+
 					if (foundNews) {
 						setCurrentNews(foundNews);
 					} else {
 						setError('Noticia no encontrada');
 					}
 				} else {
-					setError('Formato de datos inválido');
+					// If fetch failed but cached data exists, NewsService will have returned it.
+					// If still no data, treat as network/offline scenario.
+					if (data.data && data.data.length === 0) {
+						setNetworkError(true);
+					} else {
+						setError(data.error || 'Formato de datos inválido');
+					}
 				}
-			} catch (err) {
-				setError('Error al cargar la noticia');
+			} catch (err: unknown) {
+				// Detectar error de red (offline) o timeout
+				if (err instanceof Error) {
+					if (err.name === 'AbortError' || err instanceof TypeError || err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('ERR_INTERNET_DISCONNECTED')) {
+						setNetworkError(true);
+					} else {
+						setError('Error al cargar la noticia');
+					}
+				} else {
+					setError('Error desconocido al cargar la noticia');
+				}
 				console.error('Error fetching news detail:', err);
 			} finally {
 				setLoading(false);
@@ -132,6 +163,21 @@ export default function NoticiaDetailPage() {
 					</div>
 				</div>
 			</main>
+		);
+	}
+
+	if (networkError) {
+		return (
+			<>
+				<NetworkErrorModal open={networkError} onClose={() => setNetworkError(false)} />
+				<main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
+					<div className="text-center py-16">
+						<h2 className="text-2xl font-bold text-foreground mb-2">Sin conexión</h2>
+						<p className="text-muted-foreground mb-6">Para visualizar este contenido debes conectarte a internet.</p>
+						<Button onClick={handleBackClick}>Volver a noticias</Button>
+					</div>
+				</main>
+			</>
 		);
 	}
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SWRegister } from '../components/SWRegister';
 
 export const metadata: Metadata = {
 	title: 'Vota informado | MiVoto',

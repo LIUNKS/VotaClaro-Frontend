@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useTheme } from 'next-themes';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -32,23 +31,17 @@ const GeolocationMap: React.FC<GeolocationMapProps> = ({
 	longitude,
 	markerTitle = 'Ubicación'
 }) => {
-	const { theme, resolvedTheme } = useTheme();
+	// Initialize mounted based on environment so we avoid calling setState synchronously in an effect
 	const [state, setState] = useState<MapState>({
 		loading: true,
 		error: null,
-		mounted: false
+		mounted: typeof window !== 'undefined'
 	});
 
 	const map = useRef<mapboxgl.Map | null>(null);
 	const marker = useRef<mapboxgl.Marker | null>(null);
 
-	const mapContainer = useCallback((node: HTMLDivElement | null) => {
-		if (node && !map.current && state.mounted) {
-			initializeMap(node);
-		}
-	}, [state.mounted, latitude, longitude, mapboxToken, markerTitle, resolvedTheme]);
-
-	const initializeMap = (container: HTMLDivElement) => {
+	const initializeMap = useCallback((container: HTMLDivElement) => {
 		if (!mapboxToken) {
 			setState(prev => ({
 				...prev,
@@ -106,11 +99,25 @@ const GeolocationMap: React.FC<GeolocationMapProps> = ({
 				error: 'Error al inicializar el mapa. Verifica tu token de Mapbox.'
 			}));
 		}
-	};
+	}, [mapboxToken, latitude, longitude, markerTitle]);
+
+	const mapContainer = useCallback((node: HTMLDivElement | null) => {
+		if (node && !map.current && state.mounted) {
+			initializeMap(node);
+		}
+	}, [state.mounted, initializeMap]);
 
 	useEffect(() => {
 		setState(prev => ({ ...prev, mounted: true }));
 	}, []);
+
+	useEffect(() => {
+		if (map.current && marker.current && latitude && longitude && !isNaN(latitude) && !isNaN(longitude)) {
+			map.current.setCenter([longitude, latitude]);
+			marker.current.setLngLat([longitude, latitude]);
+			marker.current.setPopup(new mapboxgl.Popup().setHTML(`<h3>${markerTitle}</h3>`));
+		}
+	}, [latitude, longitude, markerTitle]);
 
 	useEffect(() => {
 		return () => {

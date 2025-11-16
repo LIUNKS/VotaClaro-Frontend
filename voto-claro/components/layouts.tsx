@@ -23,12 +23,21 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
 	const tourContext = useTourContext();
 	const { theme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
+	const [displayTheme, setDisplayTheme] = useState('light');
 	const [openDesktop, setOpenDesktop] = useState(false);
 	const [openMobile, setOpenMobile] = useState(false);
 
 	useEffect(() => {
-		setMounted(true);
+		const id = requestAnimationFrame(() => setMounted(true));
+		return () => cancelAnimationFrame(id);
 	}, []);
+
+	useEffect(() => {
+		if (mounted && theme) {
+			const id = requestAnimationFrame(() => setDisplayTheme(theme));
+			return () => cancelAnimationFrame(id);
+		}
+	}, [theme, mounted]);
   
 	// Usar props si se proporcionan, sino usar context
 	const finalOnStartTour = onStartTour || tourContext.onStartTour;
@@ -127,15 +136,15 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
 							<HelpCircle className="w-6 h-6 text-muted-foreground" />
 						</button>
 					)}
-					{mounted && (
-						<button
-							onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-							className="p-1 hover:bg-muted rounded-full transition-colors md:hidden"
-							title={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
-						>
-							{theme === 'dark' ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />}
-						</button>
-					)}
+					<button
+						onClick={() => setTheme(displayTheme === 'dark' ? 'light' : 'dark')}
+						className="p-1 hover:bg-muted rounded-full transition-colors md:hidden"
+						style={{ opacity: mounted ? 1 : 0, pointerEvents: mounted ? 'auto' : 'none' }}
+						title={`Cambiar a modo ${displayTheme === 'dark' ? 'claro' : 'oscuro'}`}
+						suppressHydrationWarning
+					>
+						{mounted && (displayTheme === 'dark' ? <Sun className="w-5 h-5 text-muted-foreground" /> : <Moon className="w-5 h-5 text-muted-foreground" />)}
+					</button>
 					<div className="hidden md:block">
 						<ModeToggle />
 					</div>

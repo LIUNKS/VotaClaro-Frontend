@@ -1,0 +1,22 @@
+{
+  "name": "Vota informado | MiVoto",
+  "short_name": "VotaClaro",
+  "description": "Información clara y confiable para tomar decisiones informadas en las elecciones",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d47a1",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗳️</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["politics", "news", "productivity"],
+  "lang": "es-ES",
+  "dir": "ltr"
+}

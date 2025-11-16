@@ -309,7 +309,7 @@ export default function PartidoDetailPage() {
 																</div>
 															)}
                               
-															<Badge variant="outline" size="sm">
+															<Badge variant="outline">
                                 Congresista
 															</Badge>
 														</div>

@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
-import { getCandidateById } from '@/lib/candidates-data';
-import personasData from '@/personas.json';
+import { useCandidates } from '@/core/modules/candidates/hooks/useCandidates';
 
 interface CandidateDetailPageProps {
   params: Promise<{
@@ -17,18 +16,18 @@ interface CandidateDetailPageProps {
 
 export default function CandidateDetailPage({ params }: CandidateDetailPageProps) {
 	const router = useRouter();
+	const resolvedParams = use(params);
+	const candidateId = resolvedParams.id;
   
+	// Usar el hook para obtener los candidatos
+	const { getCandidateById, loading } = useCandidates();
 	const [selectedSection, setSelectedSection] = useState<'biografia' | 'plan' | 'propuestas' | 'antecedentes' | 'patrimonial'>('biografia');
   
 	// Ref para el contenedor de tabs
 	const tabsContainerRef = useRef<HTMLDivElement>(null);
-	// Unwrap the params Promise using React.use()
-	const resolvedParams = use(params);
-	const candidateId = parseInt(resolvedParams.id);
-	const candidate = getCandidateById(candidateId);
   
-	// Obtener datos de personas
-	const personaData = personasData.ciudadano;
+	// Obtener el candidato por ID
+	const candidate = getCandidateById(candidateId);
 
 	// Función para hacer scroll a la tab activa
 	const scrollToActiveTab = (tabName: string) => {
@@ -62,6 +61,18 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 		scrollToActiveTab(selectedSection);
 	}, [selectedSection]);
 
+	// Loading state
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+					<p className="text-muted-foreground">Cargando información del candidato...</p>
+				</div>
+			</div>
+		);
+	}
+
 	if (!candidate) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
@@ -80,8 +91,8 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 		if (navigator.share) {
 			try {
 				await navigator.share({
-					title: `Perfil de ${candidate.name}`,
-					text: `Conoce más sobre ${candidate.name} - ${candidate.party}`,
+					title: `Perfil de ${candidate.nombre_completo}`,
+					text: `Conoce más sobre ${candidate.nombre_completo}`,
 					url: window.location.href,
 				});
 			} catch (error) {
@@ -132,8 +143,8 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 						<div className="text-center">
 							<div className="relative w-24 h-24 mx-auto mb-4">
 								<img
-									src={candidate.photo}
-									alt={candidate.name}
+									src="/placeholder-avatar.jpg"
+									alt={candidate.nombre_completo}
 									className="w-24 h-24 rounded-full object-cover border-2 border-primary/20"
 									onError={(e) => {
 										e.currentTarget.src = `data:image/svg+xml;base64,${btoa(`
@@ -147,20 +158,16 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 							</div>
               
 							<h2 className="text-xl lg:text-2xl font-bold text-foreground mb-2">
-								{personaData.nombre_completo}
+								{candidate.nombre_completo}
 							</h2>
               
 							<p className="text-muted-foreground mb-3">
-								{candidate.party}
+								{candidate.datos_personales.lugar_nacimiento.departamento}, {candidate.datos_personales.lugar_nacimiento.provincia}
 							</p>
               
 							<Badge variant="secondary" className="mb-2">
-								{candidate.position}
+                Candidato Presidencial
 							</Badge>
-              
-							<div className="text-sm text-muted-foreground">
-                DNI: {personaData.dni}
-							</div>
 						</div>
 					</CardContent>
 				</Card>
@@ -174,10 +181,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 							scrollbarWidth: 'none',
 							msOverflowStyle: 'none',
 							WebkitOverflowScrolling: 'touch'
-						}}
-						onScroll={(e) => {
-							const target = e.target as HTMLElement;
-							target.style.setProperty('&::-webkit-scrollbar', 'display: none');
 						}}
 					>
 						<button
@@ -213,28 +216,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 						>
               Patrimonial
 						</button>
-						<button
-							data-tab="plan"
-							onClick={() => handleSectionChange('plan')}
-							className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-								selectedSection === 'plan'
-									? 'bg-background text-foreground shadow-sm'
-									: 'text-muted-foreground hover:text-foreground'
-							}`}
-						>
-              Plan de Gobierno
-						</button>
-						<button
-							data-tab="propuestas"
-							onClick={() => handleSectionChange('propuestas')}
-							className={`py-2 px-3 rounded-md text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-								selectedSection === 'propuestas'
-									? 'bg-background text-foreground shadow-sm'
-									: 'text-muted-foreground hover:text-foreground'
-							}`}
-						>
-              Propuestas
-						</button>
 					</div>
 				</div>
 
@@ -250,97 +231,113 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-4">
-								<div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
+								<div className="flex justify-between items-center py-2 border-b border-border">
 									<span className="text-muted-foreground">DNI</span>
-									<span className="font-medium">{personaData.dni}</span>
+									<span className="font-medium">{candidate.dni}</span>
 								</div>
-								<div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
+								<div className="flex justify-between items-center py-2 border-b border-border">
 									<span className="text-muted-foreground">Fecha de Nacimiento</span>
-									<span className="font-medium">{personaData.datos_personales.fecha_nacimiento}</span>
+									<span className="font-medium">{candidate.datos_personales.fecha_nacimiento}</span>
 								</div>
-								<div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
+								<div className="flex justify-between items-center py-2 border-b border-border">
+									<span className="text-muted-foreground">Sexo</span>
+									<span className="font-medium">{candidate.datos_personales.sexo === 'M' ? 'Masculino' : 'Femenino'}</span>
+								</div>
+								<div className="flex justify-between items-center py-2 border-b border-border">
+									<span className="text-muted-foreground">Educación</span>
+									<span className="font-medium">{candidate.datos_personales.educacion}</span>
+								</div>
+								<div className="flex justify-between items-center py-2 border-b border-border">
 									<span className="text-muted-foreground flex items-center gap-2">
 										<MapPin className="w-4 h-4" />
                     Lugar de Nacimiento
 									</span>
-									<span className="font-medium">{personaData.datos_personales.lugar_nacimiento}</span>
+									<span className="font-medium text-right">
+										{candidate.datos_personales.lugar_nacimiento.distrito}, {candidate.datos_personales.lugar_nacimiento.provincia}, {candidate.datos_personales.lugar_nacimiento.departamento}
+									</span>
 								</div>
-								<div className="flex justify-between items-center py-2 border-b border-border last:border-b-0">
-									<span className="text-muted-foreground">Distrito</span>
-									<span className="font-medium">{personaData.datos_personales.distrito}</span>
+								<div className="flex justify-between items-center py-2">
+									<span className="text-muted-foreground">Domicilio</span>
+									<span className="font-medium text-right">{candidate.datos_personales.domicilio}</span>
 								</div>
 							</CardContent>
 						</Card>
 
 						{/* Formación Académica */}
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-lg">
-									<GraduationCap className="w-5 h-5" />
-                  Formación Académica
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="space-y-4">
-								{personaData.formacion_academica.map((edu, index) => (
-									<div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
-										<div className="font-medium text-foreground">{edu.grado} en {edu.carrera}</div>
-										<div className="text-sm text-muted-foreground">{edu.institucion}</div>
-										<div className="text-xs text-muted-foreground">Año de finalización: {edu.anio_fin}</div>
-									</div>
-								))}
-							</CardContent>
-						</Card>
+						{candidate.formacion_academica && candidate.formacion_academica.length > 0 && (
+							<Card>
+								<CardHeader>
+									<CardTitle className="flex items-center gap-2 text-lg">
+										<GraduationCap className="w-5 h-5" />
+                    Formación Académica
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-4">
+									{candidate.formacion_academica.map((edu, index) => (
+										<div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
+											<div className="font-medium text-foreground">{edu.grado} en {edu.carrera}</div>
+											<div className="text-sm text-muted-foreground">{edu.institucion}</div>
+											<div className="text-xs text-muted-foreground">Año de finalización: {edu.anio_fin}</div>
+										</div>
+									))}
+								</CardContent>
+							</Card>
+						)}
 
 						{/* Experiencia Laboral */}
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-lg">
-									<Briefcase className="w-5 h-5" />
-                  Experiencia Laboral
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="space-y-6">
-								{personaData.experiencia_laboral.map((exp, index) => (
-									<div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
-										<div className="flex justify-between items-start">
-											<span className="text-sm text-muted-foreground">
-												{exp.desde} - {exp.hasta === '0000' ? 'Presente' : exp.hasta}
-											</span>
+						{candidate.experiencia_laboral && candidate.experiencia_laboral.length > 0 && (
+							<Card>
+								<CardHeader>
+									<CardTitle className="flex items-center gap-2 text-lg">
+										<Briefcase className="w-5 h-5" />
+                    Experiencia Laboral
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-6">
+									{candidate.experiencia_laboral.map((exp, index) => (
+										<div key={index} className="space-y-2 border-b border-border pb-4 last:border-b-0 last:pb-0">
+											<div className="flex justify-between items-start">
+												<span className="text-sm text-muted-foreground">
+													{exp.desde} - {exp.hasta || 'Presente'}
+												</span>
+											</div>
+											<div className="font-medium text-foreground">{exp.cargo}</div>
+											<div className="text-sm text-muted-foreground">{exp.organizacion}</div>
 										</div>
-										<div className="font-medium text-foreground">{exp.cargo}</div>
-										<div className="text-sm text-muted-foreground">{exp.organizacion}</div>
-									</div>
-								))}
-							</CardContent>
-						</Card>
+									))}
+								</CardContent>
+							</Card>
+						)}
 
 						{/* Local de Votación */}
-						<Card>
-							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-lg">
-									<MapPin className="w-5 h-5" />
-                  Local de Votación
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="space-y-4">
-								<div className="flex justify-between items-center py-2 border-b border-border">
-									<span className="text-muted-foreground">Local</span>
-									<span className="font-medium">{personaData.local_votacion.schoolName}</span>
-								</div>
-								<div className="flex justify-between items-center py-2 border-b border-border">
-									<span className="text-muted-foreground">Dirección</span>
-									<span className="font-medium text-right">{personaData.local_votacion.address}</span>
-								</div>
-								<div className="flex justify-between items-center py-2 border-b border-border">
-									<span className="text-muted-foreground">Mesa</span>
-									<span className="font-medium">{personaData.local_votacion.tableNumber}</span>
-								</div>
-								<div className="flex justify-between items-center py-2">
-									<span className="text-muted-foreground">Horario</span>
-									<span className="font-medium">{personaData.local_votacion.hours}</span>
-								</div>
-							</CardContent>
-						</Card>
+						{candidate.local_votacion && (
+							<Card>
+								<CardHeader>
+									<CardTitle className="flex items-center gap-2 text-lg">
+										<MapPin className="w-5 h-5" />
+                    Local de Votación
+									</CardTitle>
+								</CardHeader>
+								<CardContent className="space-y-4">
+									<div className="flex justify-between items-center py-2 border-b border-border">
+										<span className="text-muted-foreground">Local</span>
+										<span className="font-medium">{candidate.local_votacion.schoolName}</span>
+									</div>
+									<div className="flex justify-between items-center py-2 border-b border-border">
+										<span className="text-muted-foreground">Dirección</span>
+										<span className="font-medium text-right">{candidate.local_votacion.address}</span>
+									</div>
+									<div className="flex justify-between items-center py-2 border-b border-border">
+										<span className="text-muted-foreground">Mesa</span>
+										<span className="font-medium">{candidate.local_votacion.tableNumber}</span>
+									</div>
+									<div className="flex justify-between items-center py-2">
+										<span className="text-muted-foreground">Horario</span>
+										<span className="font-medium">{candidate.local_votacion.hours}</span>
+									</div>
+								</CardContent>
+							</Card>
+						)}
 
 						{/* Fuente */}
 						<div className="text-center text-xs text-muted-foreground">
@@ -359,9 +356,9 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
-								{personaData.antecedentes.lista_sentencias.length > 0 ? (
+								{candidate.antecedentes.lista_sentencias.length > 0 ? (
 									<div className="space-y-4">
-										{personaData.antecedentes.lista_sentencias.map((sentencia, index) => (
+										{candidate.antecedentes.lista_sentencias.map((sentencia, index) => (
 											<div key={index} className="p-4 bg-muted/50 rounded-lg border border-border">
 												<div className="flex items-start gap-3">
 													<AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
@@ -390,6 +387,12 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 																<span className="text-foreground">Fecha:</span>
 																<span className="text-foreground">{sentencia.fecha}</span>
 															</div>
+															{sentencia.fallo && (
+																<div className="flex justify-between">
+																	<span className="text-foreground">Fallo:</span>
+																	<span className="text-foreground">{sentencia.fallo}</span>
+																</div>
+															)}
 														</div>
 													</div>
 												</div>
@@ -405,7 +408,7 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 										<p className="text-muted-foreground text-sm">No se registran sentencias o procesos judiciales</p>
 									</div>
 								)}
-                
+
 								{/* Fuente */}
 								<div className="text-center text-xs text-muted-foreground mt-6 pt-4 border-t border-border">
 									<p>Fuente: Registro Nacional de Condenas (RNC) - Poder Judicial del Perú</p>
@@ -428,15 +431,15 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 							<CardContent className="space-y-4">
 								<div className="flex justify-between items-center py-2 border-b border-border">
 									<span className="text-muted-foreground">Total de Ingresos</span>
-									<span className="font-medium text-green-600 dark:text-green-400">S/ {personaData.ingresos.total.toLocaleString()}</span>
+									<span className="font-medium text-green-600 dark:text-green-400">S/ {candidate.ingresos.total.toLocaleString()}</span>
 								</div>
 								<div className="flex justify-between items-center py-2 border-b border-border">
 									<span className="text-muted-foreground">Ingresos Públicos</span>
-									<span className="font-medium">S/ {personaData.ingresos.publico.toLocaleString()}</span>
+									<span className="font-medium">S/ {candidate.ingresos.publico.toLocaleString()}</span>
 								</div>
 								<div className="flex justify-between items-center py-2">
 									<span className="text-muted-foreground">Ingresos Privados</span>
-									<span className="font-medium">S/ {personaData.ingresos.privado.toLocaleString()}</span>
+									<span className="font-medium">S/ {candidate.ingresos.privado.toLocaleString()}</span>
 								</div>
 							</CardContent>
 						</Card>
@@ -453,27 +456,73 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 								<div className="mb-4">
 									<div className="flex justify-between items-center py-2 border-b border-border">
 										<span className="text-muted-foreground">Valor Total de Bienes</span>
-										<span className="font-medium text-green-600 dark:text-green-400">S/ {personaData.bienes.valor_total.toLocaleString()}</span>
+										<span className="font-medium text-green-600 dark:text-green-400">S/ {candidate.bienes.valor_total.toLocaleString()}</span>
 									</div>
 								</div>
-                
-								{personaData.bienes.detalle_bienes.length > 0 && (
-									<div className="space-y-4">
-										<h4 className="font-medium">Detalle de Bienes:</h4>
-										{personaData.bienes.detalle_bienes.map((bien, index) => (
+
+								{/* Inmuebles */}
+								{candidate.bienes.inmuebles && candidate.bienes.inmuebles.length > 0 && (
+									<div className="space-y-4 mb-6">
+										<h4 className="font-medium">Inmuebles:</h4>
+										{candidate.bienes.inmuebles.map((inmueble, index) => (
 											<div key={index} className="p-3 bg-muted/50 rounded-lg">
 												<div className="flex justify-between items-start mb-2">
-													<span className="font-medium">{bien.tipo_bien}</span>
-													<span className="text-sm font-medium">S/ {bien.valor.toLocaleString()}</span>
+													<span className="font-medium">{inmueble.tipo || 'Inmueble'}</span>
+													<span className="text-sm font-medium">S/ {inmueble.valor.toLocaleString()}</span>
 												</div>
 												<div className="text-sm text-muted-foreground space-y-1">
-													<div>Modelo: {bien.modelo}</div>
-													<div>Placa: {bien.placa}</div>
-													{bien.comentario && (
+													<div>Dirección: {inmueble.direccion}</div>
+													{inmueble.caracteristica && <div>Característica: {inmueble.caracteristica}</div>}
+													{inmueble.comentario && (
 														<div className="text-red-400 dark:text-red-400 text-xs mt-2 p-2 bg-muted/50 rounded">
-															{bien.comentario}
+															{inmueble.comentario}
 														</div>
 													)}
+												</div>
+											</div>
+										))}
+									</div>
+								)}
+
+								{/* Vehículos */}
+								{candidate.bienes.vehiculos && candidate.bienes.vehiculos.length > 0 && (
+									<div className="space-y-4 mb-6">
+										<h4 className="font-medium">Vehículos:</h4>
+										{candidate.bienes.vehiculos.map((vehiculo, index) => (
+											<div key={index} className="p-3 bg-muted/50 rounded-lg">
+												<div className="flex justify-between items-start mb-2">
+													<span className="font-medium">{vehiculo.modelo}</span>
+													<span className="text-sm font-medium">S/ {vehiculo.valor.toLocaleString()}</span>
+												</div>
+												<div className="text-sm text-muted-foreground space-y-1">
+													<div>Placa: {vehiculo.placa}</div>
+													{vehiculo.anio && <div>Año: {vehiculo.anio}</div>}
+													{vehiculo.caracteristica && <div>Característica: {vehiculo.caracteristica}</div>}
+													{vehiculo.comentario && (
+														<div className="text-red-400 dark:text-red-400 text-xs mt-2 p-2 bg-muted/50 rounded">
+															{vehiculo.comentario}
+														</div>
+													)}
+												</div>
+											</div>
+										))}
+									</div>
+								)}
+
+								{/* Acciones */}
+								{candidate.bienes.acciones && candidate.bienes.acciones.length > 0 && (
+									<div className="space-y-4 mb-6">
+										<h4 className="font-medium">Acciones:</h4>
+										{candidate.bienes.acciones.map((accion, index) => (
+											<div key={index} className="p-3 bg-muted/50 rounded-lg">
+												<div className="flex justify-between items-start mb-2">
+													<span className="font-medium">{accion.persona_juridica}</span>
+													<span className="text-sm font-medium">S/ {accion.valor.toLocaleString()}</span>
+												</div>
+												<div className="text-sm text-muted-foreground space-y-1">
+													<div>Tipo: {accion.tipo}</div>
+													<div>Cantidad: {accion.cantidad}</div>
+													{accion.comentario && <div>Comentario: {accion.comentario}</div>}
 												</div>
 											</div>
 										))}
@@ -483,61 +532,6 @@ export default function CandidateDetailPage({ params }: CandidateDetailPageProps
 								{/* Fuente */}
 								<div className="text-center text-xs text-muted-foreground mt-6 pt-4 border-t border-border">
 									<p>Fuente: Declaración Jurada de Bienes y Rentas - JNE</p>
-								</div>
-							</CardContent>
-						</Card>
-					</div>
-				)}
-
-				{selectedSection === 'plan' && (
-					<div className="space-y-6">
-						<Card>
-							<CardHeader>
-								<CardTitle>Plan de Gobierno</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="space-y-4">
-									{candidate.governmentPlan?.map((section, index) => (
-										<div key={index} className="space-y-2">
-											<h3 className="font-semibold text-foreground">{section.title}</h3>
-											<p className="text-muted-foreground text-sm">{section.description}</p>
-											{section.details && (
-												<ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
-													{section.details.map((detail, detailIndex) => (
-														<li key={detailIndex}>{detail}</li>
-													))}
-												</ul>
-											)}
-										</div>
-									)) || (
-										<div className="text-center py-8">
-											<p className="text-muted-foreground">Plan de gobierno próximamente disponible</p>
-										</div>
-									)}
-								</div>
-							</CardContent>
-						</Card>
-					</div>
-				)}
-
-				{selectedSection === 'propuestas' && (
-					<div className="space-y-6">
-						<Card>
-							<CardHeader>
-								<CardTitle>Propuestas Principales</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="space-y-4">
-									{candidate.proposals?.map((proposal, index) => (
-										<div key={index} className="p-4 bg-muted/50 rounded-lg">
-											<h3 className="font-semibold text-foreground mb-2">{proposal.title}</h3>
-											<p className="text-muted-foreground text-sm">{proposal.description}</p>
-										</div>
-									)) || (
-										<div className="text-center py-8">
-											<p className="text-muted-foreground">Propuestas próximamente disponibles</p>
-										</div>
-									)}
 								</div>
 							</CardContent>
 						</Card>
