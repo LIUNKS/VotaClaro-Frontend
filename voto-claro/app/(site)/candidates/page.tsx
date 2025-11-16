@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Bell, ChevronRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,17 +15,11 @@ import { useSearch, useScrollRestore } from '@/hooks';
 import { useCandidates } from '@/core/modules/candidates/hooks/useCandidates';
 import { candidatesUtils } from '@/core/modules/candidates/utils/candidates.utils';
 
-const tabs = [
-	{ id: 'presidenciales', label: 'Presidenciales', active: true },
-	{ id: 'congresales', label: 'Congresales', active: false },
-	{ id: 'senadores', label: 'Senadores', active: false },
-	{ id: 'andino', label: 'P. Andino', active: false }
-];
 
 export default function CandidatesPage() {
 	const { saveScrollPosition } = useScrollRestore({ key: 'candidates-page' });
 	const router = useRouter();
-	const [activeTab, setActiveTab] = useState('presidenciales');
+    
 
 	// Hook para obtener candidatos de la API
 	const {
@@ -50,10 +44,7 @@ export default function CandidatesPage() {
 		searchFields: ['name', 'party', 'dni']
 	});
 
-	const handleTabChange = (tabId: string) => {
-		setActiveTab(tabId);
-		setSearchTerm('');
-	};
+    
 
 	const handleCandidateClick = (candidateId: string) => {
 		saveScrollPosition();
@@ -147,24 +138,7 @@ export default function CandidatesPage() {
 				)}
 			</div>
 
-			{/* Tabs */}
-			<div className="mb-6">
-				<div className="flex space-x-6 border-b border-border">
-					{tabs.map((tab) => (
-						<button
-							key={tab.id}
-							onClick={() => handleTabChange(tab.id)}
-							className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-								activeTab === tab.id
-									? 'text-primary border-primary'
-									: 'text-muted-foreground border-transparent hover:text-foreground'
-							}`}
-						>
-							{tab.label}
-						</button>
-					))}
-				</div>
-			</div>
+
 
 			{/* Results Info */}
 			<div className="mb-6">
