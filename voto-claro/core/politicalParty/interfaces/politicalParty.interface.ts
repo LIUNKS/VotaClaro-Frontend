@@ -9,8 +9,8 @@ export interface PoliticalPartyRequest {
 
 export interface CreatePoliticalPartyPayload {
 	politicalPartyRequest: PoliticalPartyRequest;
-	urlLogo: File;
-	urlListMembers: File;
+	urlLogo?: File;
+	urlListMembers?: File;
 }
 
 export interface PoliticalParty {

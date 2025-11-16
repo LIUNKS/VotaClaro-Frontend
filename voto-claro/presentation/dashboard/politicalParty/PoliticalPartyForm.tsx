@@ -47,8 +47,8 @@ export function PoliticalPartyForm() {
 					description: values.description,
 					dateFoundation: values.dateFoundation,
 				},
-				urlLogo: values.urlLogo as File,
-				urlListMembers: values.urlListMembers as File,
+				urlLogo: values.urlLogo,
+				urlListMembers: values.urlListMembers,
 			};
 
 			await createParty(payload);
