@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Joyride from 'react-joyride';
-import { Calendar, Zap, BookOpen, AlertCircle, CheckCircle2, Menu } from 'lucide-react';
+import { Calendar, Zap, BookOpen, AlertCircle, CheckCircle2, Menu, Navigation } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -485,16 +486,17 @@ export default function HomePage() {
             <section className={`tour-member transition-opacity duration-500 ${
               shouldApplyOpacity('.tour-member') ? 'opacity-30' : 'opacity-100'
             }`}>
-              <Card>
-                <CardContent className="p-4 lg:p-6">
-                  <div className="w-full h-32 lg:h-40 bg-muted rounded-lg mb-4 overflow-hidden flex items-center justify-center">
-                    <span className="text-muted-foreground text-sm">Capacitación</span>
-                  </div>
-                  
-                  <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg">Soy Miembro de Mesa</h3>
-                  <p className="text-sm lg:text-base text-muted-foreground">Capacitación y materiales</p>
-                </CardContent>
-              </Card>
+              <Link href="/miembro-mesa" className="block group">
+                <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
+                  <CardContent className="p-4 lg:p-6">
+                    <div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
+                      <BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <h3 className="font-semibold text-card-foreground mb-2 text-base lg:text-lg group-hover:text-primary transition-colors">Soy Miembro de Mesa</h3>
+                    <p className="text-sm lg:text-base text-muted-foreground mb-0">Capacitación y materiales</p>
+                  </CardContent>
+                </Card>
+              </Link>
             </section>
           </div>
         </div>
