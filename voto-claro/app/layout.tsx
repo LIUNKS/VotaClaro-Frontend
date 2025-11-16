@@ -3,8 +3,29 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Mapa de votación',
-  description: 'Mapa interactivo para ubicaciones de votación',
+  title: 'Vota informado | VotaClaro',
+  description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
+  keywords: ['elecciones', 'votación', 'candidatos', 'información electoral', 'democracia', 'voto informado', 'procesos electorales'],
+  authors: [{ name: 'VotaClaro Team', url: 'https://web.francopm.dev/' }],
+  openGraph: {
+    title: 'Vota informado | VotaClaro',
+    description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
+    url: 'https://web.francopm.dev/',
+    images: [
+      {
+        url: 'https://ibb.co/MWNcXh3',
+        width: 1200,
+        height: 630,
+        alt: 'Vota informado | VotaClaro',
+      },
+    ],
+    locale: 'es_ES',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -8,6 +8,7 @@ export { useNews } from './useNews';
 export { useScrollRestore } from './useScrollRestore';
 export { useTour } from './useTour';
 export { useSearch } from './useSearch';
+export { useTourContext } from './useTourContext';
 
 // Hook para geolocalización
 export const useGeolocation = () => {

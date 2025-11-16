@@ -12,14 +12,14 @@ export function BottomNavigation() {
     { id: 'noticias', icon: Newspaper, label: 'Noticias', href: '/noticias' },
     { id: 'candidates', icon: Users, label: 'Candidatos', href: '/candidates' },
     { id: 'members', icon: GraduationCap, label: 'Miembros', href: '/members' },
-    { id: 'calendar', icon: Calendar, label: 'Calendario', href: '/calendario' },
+    { id: 'calendar', icon: Calendar, label: 'Calendario', href: '/calendar' },
   ] as const;
 
   const getActiveTab = () => {
     if (pathname === '/') return 'home';
     if (pathname === '/noticias' || pathname.startsWith('/noticias/')) return 'noticias';
     if (pathname === '/candidates' || pathname.startsWith('/candidates/')) return 'candidates';
-    if (pathname === '/members') return 'members';
+    if (pathname === '/miembro-mesa') return 'members';
     if (pathname === '/profile') return 'profile';
     return 'home'; // default
   };

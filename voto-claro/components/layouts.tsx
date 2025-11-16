@@ -3,12 +3,13 @@ import { Bell, HelpCircle } from 'lucide-react';
 import { ModeToggle } from './toogle-dark-mode';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTourContext } from '@/hooks/useTourContext';
 
 const navItems = [
   { name: 'Inicio', href: '/' },
   { name: 'Noticias', href: '/noticias' },
   { name: 'Candidatos', href: '/candidates' },
-  { name: 'Miembros', href: '/members' },
+  { name: 'Miembros', href: '/miembro-mesa' },
   { name: 'Calendario', href: '/calendario' },
 ];
 
@@ -19,6 +20,11 @@ interface HeaderProps {
 
 export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}) {
   const pathname = usePathname();
+  const tourContext = useTourContext();
+  
+  // Usar props si se proporcionan, sino usar context
+  const finalOnStartTour = onStartTour || tourContext.onStartTour;
+  const finalShowTourButton = showTourButton || tourContext.showTourButton;
 
   return (
     <header className="bg-card border-b border-border px-4 lg:px-8 py-4 sticky top-0 z-10 tour-welcome">
@@ -42,12 +48,30 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
               {item.name}
             </Link>
           ))}
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              pathname === '/members' 
+                ? 'bg-primary/10 text-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+              Miembros
+          </button>
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              pathname === '/profile' 
+                ? 'bg-primary/10 text-primary' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+              Perfil
+          </button>
         </nav>
           
         <div className="flex items-center gap-2">
-          {showTourButton && (
+          {finalShowTourButton && (
             <button 
-              onClick={onStartTour}
+              onClick={finalOnStartTour}
               className="p-1 hover:bg-muted rounded-full transition-colors"
               title="Iniciar tour guiado"
             >
