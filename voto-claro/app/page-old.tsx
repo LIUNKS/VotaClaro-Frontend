@@ -1,25 +1,24 @@
 'use client';
 //pagina funcional que maneja todo el home page + tour pero es necesario cambiar
 
-import { Bell, Calendar, ArrowRight, HelpCircle } from 'lucide-react';
+import { Calendar, ArrowRight, HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { NewsCard, VotingLocation, CandidatesGrid } from '@/components/home';
-import { BottomNavigation } from '@/components/BottomNavigation';
-import { Footer } from '@/components/ui/Footer';
+import { NewsCard, VotingLocation, ItemsGrid } from '@/components/home';
 import { Header } from '@/components/layouts';
 import { NewsSkeleton } from '@/components/ui/NewsSkeleton';
 import { NewsError } from '@/components/ui/NewsError';
 import { useNews, useTour } from '@/hooks';
+import { getFeaturedCandidates } from '@/lib/candidates-data';
 import { useState } from 'react';
 import Link from 'next/link';
-import Joyride from 'react-joyride';
+import Joyride, { CallBackProps } from 'react-joyride';
+import Image from 'next/image';
 
 export default function HomePage() {
-	const [activeTab, setActiveTab] = useState<'home' | 'candidates' | 'members' | 'profile'>('home');
-	const { news, loading, error, refetch, lastUpdated } = useNews(4);
+	const { news, loading, error, refetch } = useNews(4);
 	const { runTour, tourStep, handleTourCallback, startTour, isClient } = useTour();
   
 	// Estado para rastrear el elemento activo del tour
@@ -152,7 +151,7 @@ export default function HomePage() {
 	};
 
 	// Función personalizada para manejar el callback del tour y rastrear el target activo
-	const customTourCallback = (data: any) => {
+	const customTourCallback = (data: CallBackProps) => {
 		const { step, index, status, action } = data;
     
 		// Actualizar el target actual basándose en el paso activo
@@ -243,7 +242,7 @@ export default function HomePage() {
 									<div className="flex-1">
 										<p className="text-xs font-medium text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Tip</p>
 										<p className="text-xs text-emerald-600 dark:text-slate-200 mt-0.5">
-                      Haz clic en "Ver más noticias" para explorar todas las actualizaciones disponibles.
+                      Haz clic en &quot;Ver más noticias&quot; para explorar todas las actualizaciones disponibles.
 										</p>
 									</div>
 								</div>
@@ -561,7 +560,18 @@ export default function HomePage() {
 						<section className={`tour-candidates transition-opacity duration-500 ${
 							shouldApplyOpacity('.tour-candidates') ? 'opacity-30' : 'opacity-100'
 						}`}>
-							<CandidatesGrid />
+							<ItemsGrid
+								title="Conoce a tus Candidatos"
+								items={getFeaturedCandidates(3).map(candidate => ({
+									id: candidate.id,
+									name: candidate.name,
+									party: candidate.party,
+									image: candidate.image
+								}))}
+								type="candidates"
+								viewAllText="Ver todos los candidatos"
+								viewAllPath="/candidates"
+							/>
 						</section>
 					</div>
 
@@ -595,9 +605,11 @@ export default function HomePage() {
 							<Card>
 								<CardContent className="p-4 lg:p-6">
 									<div className="w-full h-32 lg:h-40 bg-muted rounded-lg mb-4 overflow-hidden">
-										<img
+										<Image
 											src="/api/placeholder/300/120"
 											alt="Miembro de mesa"
+											width={300}
+											height={120}
 											className="w-full h-full object-cover"
 											onError={(e) => {
 												e.currentTarget.src = `data:image/svg+xml;base64,${btoa(`
