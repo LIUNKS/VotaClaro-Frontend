@@ -470,7 +470,8 @@ export default function HomePage() {
             <section className={`tour-calendar transition-opacity duration-500 ${
               shouldApplyOpacity('.tour-calendar') ? 'opacity-30' : 'opacity-100'
             }`}>
-              <Card>
+              <Link href="/calendario" className="block group">
+              <Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
                 <CardContent className="p-4 lg:p-4">
                   <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
                     <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
@@ -480,6 +481,7 @@ export default function HomePage() {
                   <p className="text-sm lg:text-base text-muted-foreground">No te pierdas las fechas importantes</p>
                 </CardContent>
               </Card>
+              </Link>
             </section>
 
             {/* Soy Miembro de Mesa */}
