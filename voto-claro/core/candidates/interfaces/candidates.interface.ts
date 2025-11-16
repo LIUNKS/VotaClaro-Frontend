@@ -14,6 +14,18 @@ export interface CandidateApiData {
     };
     domicilio: string;
   };
+  formacion_academica?: Array<{
+    grado: string;
+    carrera: string;
+    institucion: string;
+    anio_fin: string;
+  }>;
+  experiencia_laboral?: Array<{
+    cargo: string;
+    organizacion: string;
+    desde: string;
+    hasta?: string;
+  }>;
   antecedentes: {
     total: number;
     penales: number;
@@ -34,6 +46,19 @@ export interface CandidateApiData {
     muebles: any[];
     inmuebles: any[];
     vehiculos: any[];
+    acciones?: Array<{
+      persona_juridica: string;
+      tipo: string;
+      cantidad: string;
+      valor: number;
+      comentario?: string;
+    }>;
+  };
+  local_votacion?: {
+    schoolName: string;
+    address: string;
+    tableNumber: string;
+    hours: string;
   };
 }
 
