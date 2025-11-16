@@ -5,6 +5,8 @@ import { NewsError } from '@/components/ui/NewsError';
 import { NewsSkeleton } from '@/components/ui/NewsSkeleton';
 import { useNews } from '@/hooks';
 import { ArrowRight, Link } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useScrollRestore } from '@/hooks/useScrollRestore';
 
 export default function NewsList(){
   const { news, loading, error, refetch } = useNews(4);
