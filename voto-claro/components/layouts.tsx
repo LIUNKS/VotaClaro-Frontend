@@ -22,13 +22,12 @@ export function Header({ onStartTour, showTourButton = false }: HeaderProps = {}
 	const pathname = usePathname();
 	const tourContext = useTourContext();
 	const { theme, setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
+	// Initialize mounted based on environment to avoid calling setState synchronously in an effect.
+	const [mounted, setMounted] = useState<boolean>(() => typeof window !== 'undefined');
 	const [openDesktop, setOpenDesktop] = useState(false);
 	const [openMobile, setOpenMobile] = useState(false);
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	// removed synchronous setState in effect; mounted is initialized directly above
   
 	// Usar props si se proporcionan, sino usar context
 	const finalOnStartTour = onStartTour || tourContext.onStartTour;
