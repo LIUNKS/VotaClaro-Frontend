@@ -2,17 +2,24 @@ import { CandidateApiData, AdaptedCandidate } from '@/core/candidates/interfaces
 
 export const candidatesUtils = {
 	adaptCandidateData(candidates: CandidateApiData[]): AdaptedCandidate[] {
-		return candidates.map(candidate => ({
-			id: candidate.id,
-			name: candidate.nombre_completo,
-			party: `${candidate.datos_personales.lugar_nacimiento.departamento}, ${candidate.datos_personales.lugar_nacimiento.provincia}`,
-			image: '/placeholder-avatar.jpg',
-			dni: candidate.dni,
-			sexo: candidate.datos_personales.sexo === 'M' ? 'Masculino' : 'Femenino',
-			educacion: candidate.datos_personales.educacion,
-			antecedentes: candidate.antecedentes.total,
-			ingresos: candidate.ingresos.total
-		}));
+		const IMAGE_BASE = 'https://fvrp2459-8080.brs.devtunnels.ms/uploads/pictures/';
+
+		return candidates.map(candidate => {
+			const imageFile = candidate.url_img && candidate.url_img.trim() !== '' ? candidate.url_img : `${candidate.id}.jpg`;
+			const imageUrl = `${IMAGE_BASE}${imageFile}`;
+
+			return {
+				id: candidate.id,
+				name: candidate.nombre_completo,
+				party: `${candidate.datos_personales.lugar_nacimiento.departamento}, ${candidate.datos_personales.lugar_nacimiento.provincia}`,
+				image: imageUrl,
+				dni: candidate.dni,
+				sexo: candidate.datos_personales.sexo === 'M' ? 'Masculino' : 'Femenino',
+				educacion: candidate.datos_personales.educacion,
+				antecedentes: candidate.antecedentes.total,
+				ingresos: candidate.ingresos.total
+			};
+		});
 	},
 
 	formatLastUpdated(lastUpdated: string | null): string {
