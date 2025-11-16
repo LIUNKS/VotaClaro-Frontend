@@ -33,19 +33,19 @@
         "./hooks/*"
       ],
       "@/services/*": [
-        "./app/services/*"
+        "./services/*"
       ],
       "@/types/*": [
-        "./app/types/*"
+        "./types/*"
       ],
       "@/utils/*": [
         "./lib/*"
       ],
       "@/constants/*": [
-        "./app/constants/*"
+        "./constants/*"
       ],
       "@/stores/*": [
-        "./app/stores/*"
+        "./atores/*"
       ],
       "@/lib/*": [
         "./lib/*"

@@ -12,22 +12,22 @@ export { useTourContext } from './useTourContext';
 
 // Hook para geolocalización
 export const useGeolocation = () => {
-		const [location, setLocation] = useState<{
+	const [location, setLocation] = useState<{
 		latitude: number;
 		longitude: number;
 		accuracy?: number;
 	} | null>(null);
 
-		// Detect support at initialization so we avoid calling setState synchronously inside effects
-		const supported = typeof navigator !== 'undefined' && !!navigator.geolocation;
-		const [error, setError] = useState<string | null>(supported ? null : 'Geolocalización no soportada');
-		const [loading, setLoading] = useState<boolean>(supported);
+	// Detect support at initialization so we avoid calling setState synchronously inside effects
+	const supported = typeof navigator !== 'undefined' && !!navigator.geolocation;
+	const [error, setError] = useState<string | null>(supported ? null : 'Geolocalización no soportada');
+	const [loading, setLoading] = useState<boolean>(supported);
 
-		useEffect(() => {
-				if (!supported) {
-						// Not supported; nothing else to do
-						return;
-				}
+	useEffect(() => {
+		if (!supported) {
+			// Not supported; nothing else to do
+			return;
+		}
 
 		const options = {
 			enableHighAccuracy: true,
