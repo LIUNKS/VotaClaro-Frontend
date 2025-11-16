@@ -21,6 +21,7 @@ export function BottomNavigation() {
     if (pathname === '/partidos' || pathname.startsWith('/partidos/')) return 'partidos';
     if (pathname === '/candidates' || pathname.startsWith('/candidates/')) return 'candidates';
     if (pathname === '/profile') return 'profile';
+    if (pathname === '/calendario') return 'calendar';
     return 'home'; // default
   };
 

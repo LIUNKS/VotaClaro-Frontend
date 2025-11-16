@@ -3,12 +3,12 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Vota informado | VotaClaro',
+  title: 'Vota informado | MiVoto',
   description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
   keywords: ['elecciones', 'votación', 'candidatos', 'información electoral', 'democracia', 'voto informado', 'procesos electorales'],
-  authors: [{ name: 'VotaClaro Team', url: 'https://web.francopm.dev/' }],
+  authors: [{ name: 'MiVoto Team', url: 'https://web.francopm.dev/' }],
   openGraph: {
-    title: 'Vota informado | VotaClaro',
+    title: 'Vota informado | MiVoto',
     description: 'Información clara y confiable para tomar decisiones informadas en las elecciones.',
     url: 'https://web.francopm.dev/',
     images: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         url: 'https://web.francopm.dev/images/page.jpg',
         width: 1200,
         height: 630,
-        alt: 'Vota informado | VotaClaro',
+        alt: 'Vota informado | MiVoto',
       },
     ],
     locale: 'es_ES',

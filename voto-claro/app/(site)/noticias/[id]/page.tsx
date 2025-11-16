@@ -8,6 +8,7 @@ import { Footer } from '@/components/ui/Footer';
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function NoticiaDetailPage() {
   const params = useParams();
@@ -88,13 +89,32 @@ export default function NoticiaDetailPage() {
     }
   };
 
+  const tuneContent = (html: string) => {
+  // Paso 1: Reemplazos básicos de entidades (ya los tienes)
+    let cleaned = html
+      .replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .replace(/&apos;/g, "'")
+      .replace(/&nbsp;/g, ' ');
+
+    // Paso 2: Remover elementos no deseados (ej. scripts, estilos, anuncios)
+    cleaned = cleaned.replace(/<script[^>]*>.*?<\/script>/gi, ''); // Remover scripts
+    cleaned = cleaned.replace(/<style[^>]*>.*?<\/style>/gi, ''); // Remover estilos inline
+
+    // Paso 3: Agregar clases CSS para estilizar (ej. para Tailwind)
+    cleaned = cleaned.replace(/<p>/g, '<p class="text-foreground leading-relaxed mb-4">');
+    cleaned = cleaned.replace(/<img /g, '<img class="my-4 rounded-lg shadow-md w-full h-auto p-4 bg-accent" ');
+
+    return cleaned;
+  };
+
   const handleBackClick = () => {
     // Regresar según desde dónde vino
-    if (activeTab === 'noticias') {
-      router.push('/noticias');
-    } else {
-      router.push('/');
-    }
+    router.back();
   };
 
   if (loading) {
@@ -130,7 +150,7 @@ export default function NoticiaDetailPage() {
 
   return (
     <>
-      <header className="bg-card border-b border-border px-4 py-4 sticky top-0 z-10">
+      <header className="bg-card border-b border-border px-4 py-4 sticky top-0">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <Button variant="ghost" size="icon" onClick={handleBackClick}>
             <ArrowLeft className="w-5 h-5" />
@@ -143,13 +163,15 @@ export default function NoticiaDetailPage() {
       <main className="max-w-4xl mx-auto px-4 py-6 pb-20 lg:pb-6">
         {currentNews.image && (
           <div className="w-full h-64 md:h-96 bg-muted rounded-lg overflow-hidden mb-6">
-            <img 
+            <Image 
               src={currentNews.image}
               alt={currentNews.title}
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
+              width={800}
+              height={400}
             />
           </div>
         )}
@@ -184,15 +206,7 @@ export default function NoticiaDetailPage() {
               <div 
                 className="text-foreground leading-relaxed space-y-4"
                 dangerouslySetInnerHTML={{
-                  __html: currentNews.contentEncoded
-                    .replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') 
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&amp;/g, '&')
-                    .replace(/&quot;/g, '"')
-                    .replace(/&#039;/g, "'")
-                    .replace(/&apos;/g, "'")
-                    .replace(/&nbsp;/g, ' ')
+                  __html: tuneContent(currentNews.contentEncoded)
                 }}
               />
             ) : (
