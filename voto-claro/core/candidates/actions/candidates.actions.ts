@@ -1,4 +1,5 @@
-import { CandidateApiData, CandidatesApiResponse } from '../interfaces/candidates.interface';
+import { CandidateApiData, CandidatesApiResponse, CitizenData, CreateCandidatePayload, CandidateResponse } from '../interfaces/candidates.interface';
+import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -89,5 +90,45 @@ export const candidatesActions = {
 
 	clearCache(): void {
 		candidatesCache.clear();
+	},
+
+	// ========== Nuevas funciones para gestión de candidatos ==========
+
+	async getCitizenByDni(dni: string): Promise<CitizenData> {
+		const response = await axios.get<CitizenData>(`${API_URL}/citizen/dni/${dni}`);
+		return response.data;
+	},
+
+	async createCandidate(payload: CreateCandidatePayload): Promise<CandidateResponse> {
+		const formData = new FormData();
+		
+		// Crear el JSON como Blob con tipo application/json
+		const jsonBlob = new Blob(
+			[JSON.stringify(payload.candidateRequest)],
+			{ type: 'application/json' }
+		);
+		formData.append('candidateRequest', jsonBlob, 'candidateRequest.json');
+		
+		// Agregar imagen solo si existe
+		if (payload.urlImgPerson) {
+			formData.append('urlImgPerson', payload.urlImgPerson);
+		}
+
+		const response = await axios.post<{ body: CandidateResponse }>(
+			`${API_URL}/candidate/add/wtPresidentialForm`,
+			formData
+		);
+
+		return response.data.body;
+	},
+
+	async getAllCandidates(): Promise<CandidateResponse[]> {
+		const response = await axios.get<{ body: CandidateResponse[] }>(`${API_URL}/candidate/list`);
+		return Array.isArray(response.data.body) ? response.data.body : [];
+	},
+
+	async getCandidateById(id: string): Promise<CandidateResponse> {
+		const response = await axios.get<{ body: CandidateResponse }>(`${API_URL}/candidate/${id}`);
+		return response.data.body;
 	}
 };
