@@ -458,7 +458,7 @@ export default function HomePage() {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-8">
             {/* Mi Local de Votación */}
             <section className={`tour-voting-location transition-opacity duration-500 ${
               shouldApplyOpacity('.tour-voting-location') ? 'opacity-30' : 'opacity-100'
@@ -472,7 +472,7 @@ export default function HomePage() {
             }`}>
               <Link href="/calendario" className="block group">
               <Card className='transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer'>
-                <CardContent className="p-4 lg:p-4">
+                <CardContent className="p-4 lg:p-5">
                   <div className="w-full h-32 lg:h-40 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg mb-4 flex items-center justify-center">
                     <Calendar className="w-12 h-12 lg:w-16 lg:h-16 text-yellow-600 dark:text-yellow-400" />
                   </div>
@@ -490,7 +490,7 @@ export default function HomePage() {
             }`}>
               <Link href="/miembro-mesa" className="block group">
                 <Card className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer">
-                  <CardContent className="p-4 lg:p-4">
+                  <CardContent className="p-4 lg:p-5">
                     <div className="w-full h-32 lg:h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
                       <BookOpen className="w-12 h-12 lg:w-16 lg:h-16 text-blue-600 dark:text-blue-400" />
                     </div>
