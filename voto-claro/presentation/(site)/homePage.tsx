@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import Joyride from 'react-joyride';
 import {
@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { VotingLocation, ItemsGrid } from '@/components/home';
 import NewsList from './newsList';
+import { usePoliticalParty } from '@/core/modules/politicalParty/hooks/usePoliticalParty';
 import { useTour } from '@/hooks/useTour';
 import { useTourContext } from '@/hooks/useTourContext';
 import { useNews } from '@/hooks';
@@ -32,7 +33,6 @@ export default function HomePage() {
 		null
 	);
 	const { news, loading, error } = useNews(4);
-	const [partidos, setPartidos] = useState([]);
 	const [showContent, setShowContent] = useState(false);
 	const [introComplete, setIntroComplete] = useState(false);
 
@@ -45,22 +45,22 @@ export default function HomePage() {
 		getAdaptedCandidates,
 	} = useCandidates();
 
-	const adaptedCandidates = getAdaptedCandidates();
-	const candidatos = adaptedCandidates.slice(0, 3);
+	const { parties, getAllParties, loading: partiesLoading } = usePoliticalParty();
 
-	// Cargar partidos desde JSON
+	const adaptedCandidates = getAdaptedCandidates();
+	const candidatos = useMemo(() => adaptedCandidates.slice(0, 3), [adaptedCandidates]);
+	const partidosDestacados = useMemo(() => parties.slice(0, 3), [parties]);
+
+	// Cargar partidos desde API solo una vez
 	useEffect(() => {
-		const loadPartidos = async () => {
-			try {
-				const response = await fetch('/partidos.json');
-				const data = await response.json();
-				// Tomar solo los primeros 3 partidos
-				setPartidos(data.partidos.slice(0, 3));
-			} catch (error) {
-				console.error('Error loading partidos:', error);
-			}
+		let isMounted = true;
+		if (isMounted && parties.length === 0 && !partiesLoading) {
+			getAllParties();
+		}
+		return () => {
+			isMounted = false;
 		};
-		loadPartidos();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -696,7 +696,7 @@ export default function HomePage() {
                                             Candidatos Destacados
 										</h3>
 									</div>
-									<div className="space-y-3 lg:space-y-4 flex-grow">
+									<div className="space-y-3 lg:space-y-4 grow">
 										{[...Array(3)].map((_, i) => (
 											<div key={i} className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg">
 												<div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-200 rounded-full animate-pulse"></div>
@@ -739,14 +739,39 @@ export default function HomePage() {
 					<div className={`w-full lg:w-1/2 tour-parties transition-opacity duration-500 ${
 						shouldApplyOpacity('.tour-parties') ? 'opacity-30' : 'opacity-100'
 					}`}>
-						<ItemsGrid
-							title="Partidos"
-							items={partidos}
-							type="partidos"
-							viewAllText="Ver todos los partidos"
-							viewAllPath="/partidos"
-							icon={Flag}
-						/>
+						{partiesLoading ? (
+							<Card className="hover:shadow-lg transition-shadow duration-200 h-full">
+								<CardContent className="p-4 lg:p-6 h-full flex flex-col">
+									<div className="flex items-center gap-2 mb-4 lg:mb-6">
+										<Flag className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
+										<h3 className="font-semibold text-card-foreground text-base lg:text-lg">
+											Partidos Destacados
+										</h3>
+									</div>
+									<div className="space-y-3 lg:space-y-4 grow">
+										{[...Array(3)].map((_, i) => (
+											<div key={i} className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg">
+												<div className="w-12 h-12 lg:w-14 lg:h-14 bg-gray-200 rounded-full animate-pulse"></div>
+												<div className="flex-1">
+													<div className="h-4 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
+													<div className="h-3 bg-gray-200 rounded w-24 animate-pulse"></div>
+												</div>
+											</div>
+										))}
+									</div>
+									<div className="w-full mt-4 lg:mt-6 py-2 lg:py-3 px-4 bg-gray-200 rounded-lg animate-pulse h-10"></div>
+								</CardContent>
+							</Card>
+						) : (
+							<ItemsGrid
+								title="Partidos"
+								items={partidosDestacados}
+								type="partidos"
+								viewAllText="Ver todos los partidos"
+								viewAllPath="/partidos"
+								icon={Flag}
+							/>
+						)}
 					</div>
 				</div>
 			</main>

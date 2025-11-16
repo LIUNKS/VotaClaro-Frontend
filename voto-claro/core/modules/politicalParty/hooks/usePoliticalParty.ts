@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { politicalPartyActions } from '@/core/politicalParty/actions/politicalParty.actions';
 import { CreatePoliticalPartyPayload, PoliticalParty } from '@/core/politicalParty/interfaces/politicalParty.interface';
 
@@ -22,7 +22,7 @@ export const usePoliticalParty = () => {
 		}
 	};
 
-	const getAllParties = async () => {
+	const getAllParties = useCallback(async () => {
 		setLoading(true);
 		setError(null);
 		try {
@@ -36,7 +36,7 @@ export const usePoliticalParty = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, []);
 
 	const getPartyById = async (id: string) => {
 		setLoading(true);

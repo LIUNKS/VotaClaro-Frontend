@@ -1,67 +1,43 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Users, MapPin, Calendar, ExternalLink } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, Users, MapPin, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { useRouter } from 'next/navigation';
-
-// Type for partido data
-interface Partido {
-  id: number;
-  nombre: string;
-  siglas: string;
-  logo: string;
-  descripcion: string;
-  fundacion: string;
-  ideologia: string;
-  lider: string;
-  miembros: string;
-  sitioWeb: string;
-  sede: string;
-  colores: string[];
-}
+import { usePoliticalParty } from '@/core/modules/politicalParty/hooks/usePoliticalParty';
 
 export default function PartidosPage() {
 	const router = useRouter();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState('');
-	const [partidos, setPartidos] = useState<Partido[]>([]);
-	const [loading, setLoading] = useState(true);
+	const { parties, getAllParties, loading } = usePoliticalParty();
 	const itemsPerPage = 6;
 
-	// Load data from JSON file
+	// Cargar partidos desde API solo una vez
 	useEffect(() => {
-		const loadPartidos = async () => {
-			try {
-				const response = await fetch('/partidos.json');
-				const data = await response.json();
-				setPartidos(data.partidos);
-			} catch (error) {
-				console.error('Error loading partidos:', error);
-			} finally {
-				setLoading(false);
-			}
+		let isMounted = true;
+		if (isMounted && parties.length === 0 && !loading) {
+			getAllParties();
+		}
+		return () => {
+			isMounted = false;
 		};
-
-		loadPartidos();
-	}, []);
-
-	const handleSearchChange = useCallback(() => {
-		setCurrentPage(1);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Filter partidos based on search term
-	const filteredPartidos = partidos.filter(partido =>
-		partido.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    partido.siglas.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    partido.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    partido.ideologia.toLowerCase().includes(searchTerm.toLowerCase())
-	);
-
-	const handlePageChange = (newPage: number) => {
+	const filteredPartidos = useMemo(() =>
+		parties.filter(partido =>
+			partido.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			partido.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			partido.ideology.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			partido.location.toLowerCase().includes(searchTerm.toLowerCase())
+		),
+	[parties, searchTerm]
+	);	const handlePageChange = (newPage: number) => {
 		setCurrentPage(newPage);
 		setTimeout(() => {
 			window.scrollTo({
@@ -75,10 +51,6 @@ export default function PartidosPage() {
 	const startIndex = (currentPage - 1) * itemsPerPage;
 	const endIndex = startIndex + itemsPerPage;
 	const currentPartidos = filteredPartidos.slice(startIndex, endIndex);
-
-	const handlePartidoClick = (id: number) => {
-		router.push(`/partidos/${id}?from=partidos`);
-	};
 
 	const getIdeologiaColor = (ideologia: string) => {
 		switch (ideologia.toLowerCase()) {
@@ -125,7 +97,7 @@ export default function PartidosPage() {
 			<div className="flex justify-between items-center mb-6">
 				<p className="text-sm text-muted-foreground">
 					{searchTerm
-						? `${filteredPartidos.length} resultado(s) para "${searchTerm}"`
+						? `${filteredPartidos.length} resultado(s) para \"${searchTerm}\"`
 						: `${filteredPartidos.length} partidos disponibles`
 					}
 				</p>
@@ -150,69 +122,65 @@ export default function PartidosPage() {
 						<Card
 							key={partido.id}
 							className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group"
-							onClick={() => handlePartidoClick(partido.id)}
+							onClick={() => router.push(`/partidos/${partido.id}`)}
 						>
 							<CardContent className="p-6">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="flex-shrink-0">
-										{partido.logo ? (
+									<div className="shrink-0">
+										{partido.urlLogo ? (
 											<img
-												src={partido.logo}
-												alt={`Logo ${partido.nombre}`}
+												src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/picture/${partido.urlLogo}`}
+												alt={`Logo ${partido.name}`}
 												className="w-16 h-16 object-contain rounded-lg bg-white p-2"
 												onError={(e) => {
-													e.currentTarget.src = `data:image/svg+xml;base64,${btoa(`
+													const target = e.currentTarget;
+													target.src = `data:image/svg+xml;base64,${btoa(`
                             <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
                               <rect width="100%" height="100%" fill="#E5E7EB"/>
-                              <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="8" fill="#9CA3AF" text-anchor="middle" dy=".3em">${partido.siglas}</text>
+                              <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle" dy=".3em">${partido.name.substring(0, 2).toUpperCase()}</text>
                             </svg>
                           `)}`;
 												}}
 											/>
 										) : (
-											<div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg flex items-center justify-center">
-												<span className="text-sm font-bold text-primary">{partido.siglas}</span>
+											<div className="w-16 h-16 bg-linear-to-br from-primary/20 to-primary/5 rounded-lg flex items-center justify-center">
+												<span className="text-sm font-bold text-primary">{partido.name.substring(0, 2).toUpperCase()}</span>
 											</div>
 										)}
 									</div>
                   
 									<div className="flex-1 min-w-0">
 										<h3 className="font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">
-											{partido.nombre}
+											{partido.name}
 										</h3>
-										<p className="text-sm text-muted-foreground">{partido.siglas}</p>
+										<p className="text-sm text-muted-foreground">{partido.ideology}</p>
 									</div>
 								</div>
 
 								<p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-									{partido.descripcion}
+									{partido.description}
 								</p>
 
 								<div className="space-y-3">
 									<div className="flex items-center justify-between">
-										<Badge variant="secondary" className={getIdeologiaColor(partido.ideologia)}>
-											{partido.ideologia}
+										<Badge variant="secondary" className={getIdeologiaColor(partido.ideology)}>
+											{partido.ideology}
 										</Badge>
 										<div className="flex items-center gap-1 text-xs text-muted-foreground">
 											<Calendar className="w-3 h-3" />
-											<span>Fund. {partido.fundacion}</span>
+											<span>Fund. {new Date(partido.dateFoundation).getFullYear()}</span>
 										</div>
 									</div>
 
 									<div className="flex items-center justify-between text-sm">
 										<div className="flex items-center gap-1 text-muted-foreground">
 											<Users className="w-4 h-4" />
-											<span>{parseInt(partido.miembros).toLocaleString()} miembros</span>
+											<span>{parseInt(partido.members).toLocaleString()} miembros</span>
 										</div>
 										<div className="flex items-center gap-1 text-muted-foreground">
 											<MapPin className="w-4 h-4" />
-											<span>{partido.sede}</span>
+											<span>{partido.location}</span>
 										</div>
-									</div>
-
-									<div className="pt-2 border-t border-border">
-										<p className="text-xs text-muted-foreground mb-1">Líder actual:</p>
-										<p className="text-sm font-medium text-foreground">{partido.lider}</p>
 									</div>
 								</div>
 							</CardContent>
@@ -276,7 +244,7 @@ export default function PartidosPage() {
 			{searchTerm && (
 				<div className="text-center py-4">
 					<p className="text-sm text-muted-foreground">
-            Mostrando {filteredPartidos.length} resultado(s) para "{searchTerm}"
+            Mostrando {filteredPartidos.length} resultado(s) para &ldquo;{searchTerm}&rdquo;
 					</p>
 				</div>
 			)}

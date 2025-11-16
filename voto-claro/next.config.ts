@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
 				hostname: 'elcomercio.pe',
 			},
 			{
+				protocol: 'http',
+				hostname: 'localhost',
+			},
+			{
+				protocol: 'https',
+				hostname: 'api.votoclaro.com', // ajustar según tu dominio de API en producción
+			},
+			{
 				protocol: 'https',
 				hostname: 'fvrp2459-8080.brs.devtunnels.ms',
 				pathname: '/uploads/**',

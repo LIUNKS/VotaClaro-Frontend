@@ -7,12 +7,18 @@ import { useScrollRestore } from '@/hooks';
 
 interface GridItem {
   id: number | string;
+  // Formato API (partidos políticos)
   name?: string;
+  description?: string;
+  urlLogo?: string;
+  ideology?: string;
+  // Formato JSON antiguo (partidos)
   nombre?: string;
-  party?: string;
   descripcion?: string;
-  image?: string;
   logo?: string;
+  // Candidatos
+  party?: string;
+  image?: string;
   dni?: string;
   sexo?: string;
   educacion?: string;
@@ -63,12 +69,26 @@ export function ItemsGrid({
 			}
 			return item.party || 'Partido no especificado';
 		} else {
-			return item.descripcion || '';
+			// Para partidos: usar description de la API o descripcion del JSON antiguo
+			return item.description || item.descripcion || '';
 		}
 	};
 
 	const getImageUrl = (item: GridItem) => {
-		return item.image || item.logo || '';
+		// Para partidos: urlLogo (API) o logo (JSON antiguo)
+		if (type === 'partidos') {
+			if (item.urlLogo) {
+				// Si la URL ya es completa, usarla directamente
+				if (item.urlLogo.startsWith('http')) {
+					return item.urlLogo;
+				}
+				// Si no, construir la URL con el prefijo de la API
+				return `${process.env.NEXT_PUBLIC_API_URL}/uploads/picture/${item.urlLogo}`;
+			}
+			return item.logo || '';
+		}
+		// Para candidatos: image
+		return item.image || '';
 	};
 
 	const getPlaceholderSvg = (size: number, fallbackText: string) => {
@@ -102,7 +122,7 @@ export function ItemsGrid({
 					</h3>
 				</div>
 
-				<div className="space-y-3 lg:space-y-4 flex-grow">
+				<div className="space-y-3 lg:space-y-4 grow">
 					{items.map((item) => (
 						<div
 							key={item.id}
@@ -110,7 +130,7 @@ export function ItemsGrid({
 							className="block cursor-pointer"
 						>
 							<div className="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-								<div className={`w-12 h-12 lg:w-14 lg:h-14 bg-muted rounded-full overflow-hidden flex-shrink-0 ${
+								<div className={`w-12 h-12 lg:w-14 lg:h-14 bg-muted rounded-full overflow-hidden shrink-0 ${
 									type === 'partidos' ? 'bg-white p-2' : ''
 								}`}>
 									<img
