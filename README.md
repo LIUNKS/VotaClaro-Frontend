@@ -126,13 +126,3 @@ https://web.francopm.dev/
 **Licencia**
 
 - Revisa el archivo `LICENSE` en la raíz del repositorio.
-
----
-
-Si quieres, puedo:
-
-- Añadir capturas, badges y un título visual.
-- Localizar el README a inglés adicionalmente.
-- Componer una sección de despliegue detallada para Vercel con variables de entorno.
-
-¿Qué prefieres que haga a continuación?
