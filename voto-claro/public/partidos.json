@@ -1,0 +1,213 @@
+{
+  "partidos": [
+    {
+      "id": 1,
+      "nombre": "Fuerza Popular",
+      "siglas": "FP",
+      "logo": "/logos/fp.png",
+      "descripcion": "Partido político peruano de derecha fundado por Alberto Fujimori y liderado actualmente por Keiko Fujimori.",
+      "fundacion": "2010",
+      "ideologia": "Derecha",
+      "lider": "Keiko Fujimori",
+      "miembros": "350000",
+      "sede": "Lima",
+
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "Keiko Fujimori",
+            "foto": "/candidatos/fp/keiko.jpg",
+            "descripcion": "Ex congresista y tres veces candidata presidencial."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Martha Chávez",
+            "region": "Lima",
+            "foto": "/candidatos/fp/martha.jpg"
+          },
+          {
+            "nombre": "Luis Galarreta",
+            "region": "Lima",
+            "foto": "/candidatos/fp/galarreta.jpg"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": 2,
+      "nombre": "Partido Aprista Peruano",
+      "siglas": "PAP",
+      "logo": "/logos/pap.png",
+      "descripcion": "Partido histórico del Perú fundado por Víctor Raúl Haya de la Torre.",
+      "fundacion": "1930",
+      "ideologia": "Centro-izquierda",
+      "lider": "Nidia Vílchez",
+      "miembros": "500000",
+      "sede": "Lima",
+
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "Nidia Vílchez",
+            "foto": "/candidatos/pap/vilchez.jpg",
+            "descripcion": "Ex ministra y ex congresista."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Omar Quesada",
+            "region": "Ayacucho",
+            "foto": "/candidatos/pap/quesada.jpg"
+          },
+          {
+            "nombre": "Mauricio Mulder",
+            "region": "Lima",
+            "foto": "/candidatos/pap/mulder.jpg"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": 3,
+      "nombre": "Acción Popular",
+      "siglas": "AP",
+      "logo": "/logos/ap.png",
+      "descripcion": "Partido democrático fundado por Fernando Belaúnde Terry.",
+      "fundacion": "1956",
+      "ideologia": "Centro",
+      "lider": "Edmundo del Águila",
+      "miembros": "280000",
+      "sede": "Lima",
+
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "Yonhy Lescano",
+            "foto": "/candidatos/ap/lescano.jpg",
+            "descripcion": "Ex congresista de Acción Popular."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Víctor Andrés García Belaunde",
+            "region": "Lima",
+            "foto": "/candidatos/ap/vitocho.jpg"
+          },
+          {
+            "nombre": "Maricarmen Alva",
+            "region": "Lima",
+            "foto": "/candidatos/ap/alva.jpg"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": 4,
+      "nombre": "Alianza para el Progreso",
+      "siglas": "APP",
+      "logo": "/logos/app.png",
+      "descripcion": "Partido político fundado por César Acuña con fuerte influencia regional.",
+      "fundacion": "2001",
+      "ideologia": "Centro",
+      "lider": "César Acuña",
+      "miembros": "320000",
+      "sede": "Trujillo",
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "César Acuña",
+            "foto": "/candidatos/app/acuna.jpg",
+            "descripcion": "Fundador de APP y gobernador regional de La Libertad."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Lady Camones",
+            "region": "Áncash",
+            "foto": "/candidatos/app/camones.jpg"
+          },
+          {
+            "nombre": "Eduardo Salhuana",
+            "region": "Madre de Dios",
+            "foto": "/candidatos/app/salhuana.jpg"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": 5,
+      "nombre": "Perú Libre",
+      "siglas": "PL",
+      "logo": "/logos/pl.png",
+      "descripcion": "Partido marxista-leninista fundado por Vladimir Cerrón.",
+      "fundacion": "2008",
+      "ideologia": "Izquierda",
+      "lider": "Vladimir Cerrón",
+      "miembros": "180000",
+      "sitioWeb": "https://perulibre.pe",
+      "sede": "Junín",
+
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "Vladimir Cerrón",
+            "foto": "/candidatos/pl/cerron.jpg",
+            "descripcion": "Fundador de Perú Libre y ex gobernador regional."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Guillermo Bermejo",
+            "region": "Lima",
+            "foto": "/candidatos/pl/bermejo.jpg"
+          },
+          {
+            "nombre": "Kelly Portalatino",
+            "region": "Lima",
+            "foto": "/candidatos/pl/portalatino.jpg"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": 6,
+      "nombre": "Renovación Popular",
+      "siglas": "RP",
+      "logo": "/logos/rp.png",
+      "descripcion": "Partido conservador liderado por Rafael López Aliaga.",
+      "fundacion": "2020",
+      "ideologia": "Derecha",
+      "lider": "Rafael López Aliaga",
+      "miembros": "150000",
+      "sede": "Lima",
+
+      "candidatos": {
+        "presidenciales": [
+          {
+            "nombre": "Rafael López Aliaga",
+            "foto": "/candidatos/rp/aliaga.jpg",
+            "descripcion": "Empresario y alcalde de Lima."
+          }
+        ],
+        "congresales": [
+          {
+            "nombre": "Jorge Montoya",
+            "region": "Lima",
+            "foto": "/candidatos/rp/montoya.jpg"
+          },
+          {
+            "nombre": "Norma Yarrow",
+            "region": "Lima",
+            "foto": "/candidatos/rp/yarrow.jpg"
+          }
+        ]
+      }
+    }
+  ]
+}
